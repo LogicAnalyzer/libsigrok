@@ -23,6 +23,7 @@
 SR_PRIV int send_shortcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command)
 {
+	sr_dbg("Entering send_shortcommand");
 	char buf[1];
 
 	sr_dbg("Sending cmd 0x%.2x.", command);
@@ -39,6 +40,7 @@ SR_PRIV int send_shortcommand(struct sr_serial_dev_inst *serial,
 SR_PRIV int send_longcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command, uint8_t *data)
 {
+	sr_dbg("Entering send_longcommand");
 	char buf[5];
 
 	sr_dbg("Sending cmd 0x%.2x data 0x%.2x%.2x%.2x%.2x.", command,
@@ -59,6 +61,7 @@ SR_PRIV int send_longcommand(struct sr_serial_dev_inst *serial,
 
 SR_PRIV int ols_send_reset(struct sr_serial_dev_inst *serial)
 {
+	sr_dbg("Entering ols_send_reset");
 	unsigned int i;
 
 	for (i = 0; i < 5; i++) {
@@ -72,6 +75,7 @@ SR_PRIV int ols_send_reset(struct sr_serial_dev_inst *serial)
 /* Configures the channel mask based on which channels are enabled. */
 SR_PRIV void ols_channel_mask(const struct sr_dev_inst *sdi)
 {
+	sr_dbg("Entering old_channel_mask");
 	struct dev_context *devc;
 	struct sr_channel *channel;
 	const GSList *l;
@@ -88,6 +92,7 @@ SR_PRIV void ols_channel_mask(const struct sr_dev_inst *sdi)
 
 SR_PRIV int ols_convert_trigger(const struct sr_dev_inst *sdi)
 {
+	sr_dbg("Entering ols_convert_trigger");
 	struct dev_context *devc;
 	struct sr_trigger *trigger;
 	struct sr_trigger_stage *stage;
@@ -131,6 +136,7 @@ SR_PRIV int ols_convert_trigger(const struct sr_dev_inst *sdi)
 
 SR_PRIV struct dev_context *ols_dev_new(void)
 {
+	sr_dbg("Entering old_dev_new");
 	struct dev_context *devc;
 
 	devc = g_malloc0(sizeof(struct dev_context));
@@ -149,6 +155,7 @@ SR_PRIV struct dev_context *ols_dev_new(void)
 
 SR_PRIV struct sr_dev_inst *get_metadata(struct sr_serial_dev_inst *serial)
 {
+	sr_dbg("Entering get_metadata");
 	struct sr_dev_inst *sdi;
 	struct dev_context *devc;
 	uint32_t tmp_int, ui;
@@ -289,6 +296,7 @@ SR_PRIV struct sr_dev_inst *get_metadata(struct sr_serial_dev_inst *serial)
 SR_PRIV int ols_set_samplerate(const struct sr_dev_inst *sdi,
 		const uint64_t samplerate)
 {
+	sr_dbg("Entering ols_set_samplerate");
 	struct dev_context *devc;
 
 	devc = sdi->priv;
@@ -324,6 +332,7 @@ SR_PRIV int ols_set_samplerate(const struct sr_dev_inst *sdi,
 
 SR_PRIV void abort_acquisition(const struct sr_dev_inst *sdi)
 {
+	sr_dbg("Entering abort_acquisition");
 	struct sr_serial_dev_inst *serial;
 
 	serial = sdi->conn;
@@ -334,6 +343,7 @@ SR_PRIV void abort_acquisition(const struct sr_dev_inst *sdi)
 
 SR_PRIV int ols_receive_data(int fd, int revents, void *cb_data)
 {
+	sr_dbg("Entering ols_receive_data");
 	struct dev_context *devc;
 	struct sr_dev_inst *sdi;
 	struct sr_serial_dev_inst *serial;
