@@ -506,7 +506,7 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	/* Reset all operational states. */
 	devc->rle_count = devc->num_transfers = 0;
 	devc->num_samples = devc->num_bytes = 0;
-	evc->cnt_samples = devc->cnt_samples_rle = 0;
+	devc->cnt_samples = devc->cnt_samples_rle = 0;
 	memset(devc->sample, 0, 4);
 
 	std_session_send_df_header(sdi);
