@@ -191,6 +191,12 @@ src_libdrivers_tail_la_SOURCES = src/driver_list_stop.c
 
 src_libdrivers_la_SOURCES = src/drivers.c
 
+if HW_ACSP
+src_libdrivers_la_SOURCES += \
+	src/hardware/acsp/protocol.h \
+	src/hardware/acsp/protocol.c \
+	src/hardware/acsp/api.c
+endif
 if HW_AGILENT_DMM
 src_libdrivers_la_SOURCES += \
 	src/hardware/agilent-dmm/protocol.h \
