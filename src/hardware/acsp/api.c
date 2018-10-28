@@ -414,33 +414,43 @@ static int config_list(uint32_t key, GVariant **data,
 	switch (key) {
 	case SR_CONF_SCAN_OPTIONS:
 	case SR_CONF_DEVICE_OPTIONS:
+		sr_dbg("SR_CONF_DEVICE_OPTIONS");
 		return STD_CONFIG_LIST(key, data, sdi, cg, scanopts, drvopts, devopts);
 	case SR_CONF_SAMPLERATE:
+		sr_dbg("SR_CONF_SAMPLERATE");
 		*data = std_gvar_samplerates_steps(ARRAY_AND_SIZE(samplerates));
 		break;
 	case SR_CONF_TRIGGER_MATCH:
+		sr_dbg("SR_CONF_TRIGGER_MATC");
 		*data = std_gvar_array_i32(ARRAY_AND_SIZE(trigger_matches));
 		break;
 	case SR_CONF_PATTERN_MODE:
+		sr_dbg("SR_CONF_PATTERN_MODE");
 		*data = g_variant_new_strv(ARRAY_AND_SIZE(patterns));
 		break;
 	case SR_CONF_LIMIT_SAMPLES:
+		sr_dbg("SR_CONF_LIMIT_SAMPLES");
 		if (!sdi)
+			sr_dbg("Not sdi");
 			return SR_ERR_ARG;
 		devc = sdi->priv;
 		if (devc->flag_reg & FLAG_RLE)
+			sr_dbg("devc->flag_reg & FLAG_RLE");
 			return SR_ERR_NA;
 		if (devc->max_samples == 0)
 			/* Device didn't specify sample memory size in metadata. */
+			sr_dbg("devc->max_samples == 0");
 			return SR_ERR_NA;
 		/*
 		 * Channel groups are turned off if no channels in that group are
 		 * enabled, making more room for samples for the enabled group.
 		*/
+		sr_dbg("Attempting channel mask");
 		acsp_channel_mask(sdi);
 		num_acsp_changrp = 0;
 		for (i = 0; i < 4; i++) {
 			if (devc->channel_mask & (0xff << (i * 8)))
+				sr_dbg("devc->channel_mask & (0xff << (i * 8))");
 				num_acsp_changrp++;
 		}
 
