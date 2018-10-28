@@ -319,7 +319,7 @@ static int config_set(uint32_t key, GVariant *data,
 		tmp_u64 = g_variant_get_uint64(data);
 		if (tmp_u64 < samplerates[0] || tmp_u64 > samplerates[1])
 			return SR_ERR_SAMPLERATE;
-		return ols_set_samplerate(sdi, g_variant_get_uint64(data));
+		return acsp_set_samplerate(sdi, g_variant_get_uint64(data));
 	case SR_CONF_LIMIT_SAMPLES:
 		tmp_u64 = g_variant_get_uint64(data);
 		if (tmp_u64 < MIN_NUM_SAMPLES)
@@ -402,7 +402,7 @@ static int config_list(uint32_t key, GVariant **data,
 	/*----------above is the given code, below is from O L S----------*/
 
 	struct dev_context *devc;
-	int num_ols_changrp, i;
+	int num_acsp_changrp, i;
 
 	switch (key) {
 	case SR_CONF_SCAN_OPTIONS:
@@ -430,15 +430,15 @@ static int config_list(uint32_t key, GVariant **data,
 		 * Channel groups are turned off if no channels in that group are
 		 * enabled, making more room for samples for the enabled group.
 		*/
-		ols_channel_mask(sdi);
-		num_ols_changrp = 0;
+		acsp_channel_mask(sdi);
+		num_acsp_changrp = 0;
 		for (i = 0; i < 4; i++) {
 			if (devc->channel_mask & (0xff << (i * 8)))
-				num_ols_changrp++;
+				num_acsp_changrp++;
 		}
 
 		*data = std_gvar_tuple_u64(MIN_NUM_SAMPLES,
-			(num_ols_changrp) ? devc->max_samples / num_ols_changrp : MIN_NUM_SAMPLES);
+			(num_acsp_changrp) ? devc->max_samples / num_acsp_changrp : MIN_NUM_SAMPLES);
 		break;
 	default:
 		return SR_ERR_NA;
@@ -500,21 +500,21 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	struct dev_context *devc;
 	struct sr_serial_dev_inst *serial;
 	uint16_t samplecount, readcount, delaycount;
-	uint8_t ols_changrp_mask, arg[4];
-	int num_ols_changrp;
+	uint8_t acsp_changrp_mask, arg[4];
+	int num_acsp_changrp;
 	int ret, i;
 
 	devc = sdi->priv;
 	serial = sdi->conn;
 
-	ols_channel_mask(sdi);
+	acsp_channel_mask(sdi);
 
-	num_ols_changrp = 0;
-	ols_changrp_mask = 0;
+	num_acsp_changrp = 0;
+	acsp_changrp_mask = 0;
 	for (i = 0; i < 4; i++) {
 		if (devc->channel_mask & (0xff << (i * 8))) {
-			ols_changrp_mask |= (1 << i);
-			num_ols_changrp++;
+			acsp_changrp_mask |= (1 << i);
+			num_acsp_changrp++;
 		}
 	}
 
@@ -522,7 +522,7 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	 * Limit readcount to prevent reading past the end of the hardware
 	 * buffer.
 	 */
-	samplecount = MIN(devc->max_samples / num_ols_changrp, devc->limit_samples);
+	samplecount = MIN(devc->max_samples / num_acsp_changrp, devc->limit_samples);
 	readcount = samplecount / 4;
 
 	/* Rather read too many samples than too few. */
@@ -530,23 +530,23 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 		readcount++;
 
 	/* Basic triggers. */
-	if (ols_convert_trigger(sdi) != SR_OK) {
+	if (acsp_convert_trigger(sdi) != SR_OK) {
 		sr_err("Failed to configure channels.");
 		return SR_ERR;
 	}
 	if (devc->num_stages > 0) {
 		/*
-		 * According to http://mygizmos.org/ols/Logic-Sniffer-FPGA-Spec.pdf
+		 * According to http://mygizmos.org/acsp/Logic-Sniffer-FPGA-Spec.pdf
 		 * reset command must be send prior each arm command
 		 */
 		sr_dbg("Send reset command before trigger configure");
-		if (ols_send_reset(serial) != SR_OK)
+		if (acsp_send_reset(serial) != SR_OK)
 			return SR_ERR;
 
 		delaycount = readcount * (1 - devc->capture_ratio / 100.0);
 		devc->trigger_at = (readcount - delaycount) * 4 - devc->num_stages;
 		for (i = 0; i <= devc->num_stages; i++) {
-			sr_dbg("Setting OLS stage %d trigger.", i);
+			sr_dbg("Setting acsp stage %d trigger.", i);
 			if ((ret = set_trigger(sdi, i)) != SR_OK)
 				return ret;
 		}
@@ -586,10 +586,10 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 			devc->flag_reg & FLAG_FILTER ? "on": "off",
 			devc->flag_reg & FLAG_DEMUX ? "on" : "off");
 	/*
-	 * Enable/disable OLS channel groups in the flag register according
+	 * Enable/disable acsp channel groups in the flag register according
 	 * to the channel mask. 1 means "disable channel".
 	 */
-	devc->flag_reg |= ~(ols_changrp_mask << 2) & 0x3c;
+	devc->flag_reg |= ~(acsp_changrp_mask << 2) & 0x3c;
 	arg[0] = devc->flag_reg & 0xff;
 	arg[1] = devc->flag_reg >> 8;
 	arg[2] = arg[3] = 0x00;
@@ -612,7 +612,7 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	 * that means it's finished. But wait at least 100 ms to be safe.
 	 */
 	serial_source_add(sdi->session, serial, G_IO_IN, 100,
-			ols_receive_data, (struct sr_dev_inst *)sdi);
+			acsp_receive_data, (struct sr_dev_inst *)sdi);
 
 	return SR_OK;
 }
