@@ -20,317 +20,317 @@
 #include <config.h>
 #include "protocol.h"
 
-SR_PRIV int send_shortcommand(struct sr_serial_dev_inst *serial,
-		uint8_t command)
-{
-	char buf[1];
+// SR_PRIV int send_shortcommand(struct sr_serial_dev_inst *serial,
+// 		uint8_t command)
+// {
+// 	char buf[1];
 
-	sr_dbg("Sending cmd 0x%.2x.", command);
-	buf[0] = command;
-	if (serial_write_blocking(serial, buf, 1, serial_timeout(serial, 1)) != 1)
-		return SR_ERR;
+// 	sr_dbg("Sending cmd 0x%.2x.", command);
+// 	buf[0] = command;
+// 	if (serial_write_blocking(serial, buf, 1, serial_timeout(serial, 1)) != 1)
+// 		return SR_ERR;
 
-	if (serial_drain(serial) != 0)
-		return SR_ERR;
+// 	if (serial_drain(serial) != 0)
+// 		return SR_ERR;
 
-	return SR_OK;
-}
+// 	return SR_OK;
+// }
 
-SR_PRIV int send_longcommand(struct sr_serial_dev_inst *serial,
-		uint8_t command, uint8_t *data)
-{
-	char buf[5];
+// SR_PRIV int send_longcommand(struct sr_serial_dev_inst *serial,
+// 		uint8_t command, uint8_t *data)
+// {
+// 	char buf[5];
 
-	sr_dbg("Sending cmd 0x%.2x data 0x%.2x%.2x%.2x%.2x.", command,
-			data[0], data[1], data[2], data[3]);
-	buf[0] = command;
-	buf[1] = data[0];
-	buf[2] = data[1];
-	buf[3] = data[2];
-	buf[4] = data[3];
-	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 5)
-		return SR_ERR;
+// 	sr_dbg("Sending cmd 0x%.2x data 0x%.2x%.2x%.2x%.2x.", command,
+// 			data[0], data[1], data[2], data[3]);
+// 	buf[0] = command;
+// 	buf[1] = data[0];
+// 	buf[2] = data[1];
+// 	buf[3] = data[2];
+// 	buf[4] = data[3];
+// 	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 5)
+// 		return SR_ERR;
 
-	if (serial_drain(serial) != 0)
-		return SR_ERR;
+// 	if (serial_drain(serial) != 0)
+// 		return SR_ERR;
 
-	return SR_OK;
-}
+// 	return SR_OK;
+// }
 
-SR_PRIV int ols_send_reset(struct sr_serial_dev_inst *serial)
-{
-	unsigned int i;
+// SR_PRIV int ols_send_reset(struct sr_serial_dev_inst *serial)
+// {
+// 	unsigned int i;
 
-	for (i = 0; i < 5; i++) {
-		if (send_shortcommand(serial, CMD_RESET) != SR_OK)
-			return SR_ERR;
-	}
+// 	for (i = 0; i < 5; i++) {
+// 		if (send_shortcommand(serial, CMD_RESET) != SR_OK)
+// 			return SR_ERR;
+// 	}
 
-	return SR_OK;
-}
+// 	return SR_OK;
+// }
 
-/* Configures the channel mask based on which channels are enabled. */
-SR_PRIV void ols_channel_mask(const struct sr_dev_inst *sdi)
-{
-	struct dev_context *devc;
-	struct sr_channel *channel;
-	const GSList *l;
+// /* Configures the channel mask based on which channels are enabled. */
+// SR_PRIV void ols_channel_mask(const struct sr_dev_inst *sdi)
+// {
+// 	struct dev_context *devc;
+// 	struct sr_channel *channel;
+// 	const GSList *l;
 
-	devc = sdi->priv;
+// 	devc = sdi->priv;
 
-	devc->channel_mask = 0;
-	for (l = sdi->channels; l; l = l->next) {
-		channel = l->data;
-		if (channel->enabled)
-			devc->channel_mask |= 1 << channel->index;
-	}
-}
+// 	devc->channel_mask = 0;
+// 	for (l = sdi->channels; l; l = l->next) {
+// 		channel = l->data;
+// 		if (channel->enabled)
+// 			devc->channel_mask |= 1 << channel->index;
+// 	}
+// }
 
-SR_PRIV int ols_convert_trigger(const struct sr_dev_inst *sdi)
-{
-	struct dev_context *devc;
-	struct sr_trigger *trigger;
-	struct sr_trigger_stage *stage;
-	struct sr_trigger_match *match;
-	const GSList *l, *m;
-	int i;
+// SR_PRIV int ols_convert_trigger(const struct sr_dev_inst *sdi)
+// {
+// 	struct dev_context *devc;
+// 	struct sr_trigger *trigger;
+// 	struct sr_trigger_stage *stage;
+// 	struct sr_trigger_match *match;
+// 	const GSList *l, *m;
+// 	int i;
 
-	devc = sdi->priv;
+// 	devc = sdi->priv;
 
-	devc->num_stages = 0;
-	for (i = 0; i < NUM_TRIGGER_STAGES; i++) {
-		devc->trigger_mask[i] = 0;
-		devc->trigger_value[i] = 0;
-	}
+// 	devc->num_stages = 0;
+// 	for (i = 0; i < NUM_TRIGGER_STAGES; i++) {
+// 		devc->trigger_mask[i] = 0;
+// 		devc->trigger_value[i] = 0;
+// 	}
 
-	if (!(trigger = sr_session_trigger_get(sdi->session)))
-		return SR_OK;
+// 	if (!(trigger = sr_session_trigger_get(sdi->session)))
+// 		return SR_OK;
 
-	devc->num_stages = g_slist_length(trigger->stages);
-	if (devc->num_stages > NUM_TRIGGER_STAGES) {
-		sr_err("This device only supports %d trigger stages.",
-				NUM_TRIGGER_STAGES);
-		return SR_ERR;
-	}
+// 	devc->num_stages = g_slist_length(trigger->stages);
+// 	if (devc->num_stages > NUM_TRIGGER_STAGES) {
+// 		sr_err("This device only supports %d trigger stages.",
+// 				NUM_TRIGGER_STAGES);
+// 		return SR_ERR;
+// 	}
 
-	for (l = trigger->stages; l; l = l->next) {
-		stage = l->data;
-		for (m = stage->matches; m; m = m->next) {
-			match = m->data;
-			if (!match->channel->enabled)
-				/* Ignore disabled channels with a trigger. */
-				continue;
-			devc->trigger_mask[stage->stage] |= 1 << match->channel->index;
-			if (match->match == SR_TRIGGER_ONE)
-				devc->trigger_value[stage->stage] |= 1 << match->channel->index;
-		}
-	}
+// 	for (l = trigger->stages; l; l = l->next) {
+// 		stage = l->data;
+// 		for (m = stage->matches; m; m = m->next) {
+// 			match = m->data;
+// 			if (!match->channel->enabled)
+// 				/* Ignore disabled channels with a trigger. */
+// 				continue;
+// 			devc->trigger_mask[stage->stage] |= 1 << match->channel->index;
+// 			if (match->match == SR_TRIGGER_ONE)
+// 				devc->trigger_value[stage->stage] |= 1 << match->channel->index;
+// 		}
+// 	}
 
-	return SR_OK;
-}
+// 	return SR_OK;
+// }
 
-SR_PRIV struct dev_context *ols_dev_new(void)
-{
-	struct dev_context *devc;
+// SR_PRIV struct dev_context *ols_dev_new(void)
+// {
+// 	struct dev_context *devc;
 
-	devc = g_malloc0(sizeof(struct dev_context));
+// 	devc = g_malloc0(sizeof(struct dev_context));
 
-	/* Device-specific settings */
-	devc->max_samples = devc->max_samplerate = devc->protocol_version = 0;
+// 	/* Device-specific settings */
+// 	devc->max_samples = devc->max_samplerate = devc->protocol_version = 0;
 
-	/* Acquisition settings */
-	devc->limit_samples = devc->capture_ratio = 0;
-	devc->trigger_at = -1;
-	devc->channel_mask = 0xffffffff;
-	devc->flag_reg = 0;
+// 	/* Acquisition settings */
+// 	devc->limit_samples = devc->capture_ratio = 0;
+// 	devc->trigger_at = -1;
+// 	devc->channel_mask = 0xffffffff;
+// 	devc->flag_reg = 0;
 
-	return devc;
-}
+// 	return devc;
+// }
 
-SR_PRIV struct sr_dev_inst *get_metadata(struct sr_serial_dev_inst *serial)
-{
-	struct sr_dev_inst *sdi;
-	struct dev_context *devc;
-	uint32_t tmp_int, ui;
-	uint8_t key, type, token;
-	int delay_ms;
-	GString *tmp_str, *devname, *version;
-	guchar tmp_c;
+// SR_PRIV struct sr_dev_inst *get_metadata(struct sr_serial_dev_inst *serial)
+// {
+// 	struct sr_dev_inst *sdi;
+// 	struct dev_context *devc;
+// 	uint32_t tmp_int, ui;
+// 	uint8_t key, type, token;
+// 	int delay_ms;
+// 	GString *tmp_str, *devname, *version;
+// 	guchar tmp_c;
 
-	sdi = g_malloc0(sizeof(struct sr_dev_inst));
-	sdi->status = SR_ST_INACTIVE;
-	devc = ols_dev_new();
-	sdi->priv = devc;
+// 	sdi = g_malloc0(sizeof(struct sr_dev_inst));
+// 	sdi->status = SR_ST_INACTIVE;
+// 	devc = ols_dev_new();
+// 	sdi->priv = devc;
 
-	devname = g_string_new("");
-	version = g_string_new("");
+// 	devname = g_string_new("");
+// 	version = g_string_new("");
 
-	key = 0xff;
-	while (key) {
-		delay_ms = serial_timeout(serial, 1);
-		if (serial_read_blocking(serial, &key, 1, delay_ms) != 1)
-			break;
-		if (key == 0x00) {
-			sr_dbg("Got metadata key 0x00, metadata ends.");
-			break;
-		}
-		type = key >> 5;
-		token = key & 0x1f;
-		switch (type) {
-		case 0:
-			/* NULL-terminated string */
-			tmp_str = g_string_new("");
-			delay_ms = serial_timeout(serial, 1);
-			while (serial_read_blocking(serial, &tmp_c, 1, delay_ms) == 1 && tmp_c != '\0')
-				g_string_append_c(tmp_str, tmp_c);
-			sr_dbg("Got metadata key 0x%.2x value '%s'.",
-			       key, tmp_str->str);
-			switch (token) {
-			case 0x01:
-				/* Device name */
-				devname = g_string_append(devname, tmp_str->str);
-				break;
-			case 0x02:
-				/* FPGA firmware version */
-				if (version->len)
-					g_string_append(version, ", ");
-				g_string_append(version, "FPGA version ");
-				g_string_append(version, tmp_str->str);
-				break;
-			case 0x03:
-				/* Ancillary version */
-				if (version->len)
-					g_string_append(version, ", ");
-				g_string_append(version, "Ancillary version ");
-				g_string_append(version, tmp_str->str);
-				break;
-			default:
-				sr_info("ols: unknown token 0x%.2x: '%s'",
-					token, tmp_str->str);
-				break;
-			}
-			g_string_free(tmp_str, TRUE);
-			break;
-		case 1:
-			/* 32-bit unsigned integer */
-			delay_ms = serial_timeout(serial, 4);
-			if (serial_read_blocking(serial, &tmp_int, 4, delay_ms) != 4)
-				break;
-			tmp_int = RB32(&tmp_int);
-			sr_dbg("Got metadata key 0x%.2x value 0x%.8x.",
-			       key, tmp_int);
-			switch (token) {
-			case 0x00:
-				/* Number of usable channels */
-				for (ui = 0; ui < tmp_int; ui++)
-					sr_channel_new(sdi, ui, SR_CHANNEL_LOGIC, TRUE,
-							ols_channel_names[ui]);
-				break;
-			case 0x01:
-				/* Amount of sample memory available (bytes) */
-				devc->max_samples = tmp_int;
-				break;
-			case 0x02:
-				/* Amount of dynamic memory available (bytes) */
-				/* what is this for? */
-				break;
-			case 0x03:
-				/* Maximum sample rate (Hz) */
-				devc->max_samplerate = tmp_int;
-				break;
-			case 0x04:
-				/* protocol version */
-				devc->protocol_version = tmp_int;
-				break;
-			default:
-				sr_info("Unknown token 0x%.2x: 0x%.8x.",
-					token, tmp_int);
-				break;
-			}
-			break;
-		case 2:
-			/* 8-bit unsigned integer */
-			delay_ms = serial_timeout(serial, 1);
-			if (serial_read_blocking(serial, &tmp_c, 1, delay_ms) != 1)
-				break;
-			sr_dbg("Got metadata key 0x%.2x value 0x%.2x.",
-			       key, tmp_c);
-			switch (token) {
-			case 0x00:
-				/* Number of usable channels */
-				for (ui = 0; ui < tmp_c; ui++)
-					sr_channel_new(sdi, ui, SR_CHANNEL_LOGIC, TRUE,
-							ols_channel_names[ui]);
-				break;
-			case 0x01:
-				/* protocol version */
-				devc->protocol_version = tmp_c;
-				break;
-			default:
-				sr_info("Unknown token 0x%.2x: 0x%.2x.",
-					token, tmp_c);
-				break;
-			}
-			break;
-		default:
-			/* unknown type */
-			break;
-		}
-	}
+// 	key = 0xff;
+// 	while (key) {
+// 		delay_ms = serial_timeout(serial, 1);
+// 		if (serial_read_blocking(serial, &key, 1, delay_ms) != 1)
+// 			break;
+// 		if (key == 0x00) {
+// 			sr_dbg("Got metadata key 0x00, metadata ends.");
+// 			break;
+// 		}
+// 		type = key >> 5;
+// 		token = key & 0x1f;
+// 		switch (type) {
+// 		case 0:
+// 			/* NULL-terminated string */
+// 			tmp_str = g_string_new("");
+// 			delay_ms = serial_timeout(serial, 1);
+// 			while (serial_read_blocking(serial, &tmp_c, 1, delay_ms) == 1 && tmp_c != '\0')
+// 				g_string_append_c(tmp_str, tmp_c);
+// 			sr_dbg("Got metadata key 0x%.2x value '%s'.",
+// 			       key, tmp_str->str);
+// 			switch (token) {
+// 			case 0x01:
+// 				/* Device name */
+// 				devname = g_string_append(devname, tmp_str->str);
+// 				break;
+// 			case 0x02:
+// 				/* FPGA firmware version */
+// 				if (version->len)
+// 					g_string_append(version, ", ");
+// 				g_string_append(version, "FPGA version ");
+// 				g_string_append(version, tmp_str->str);
+// 				break;
+// 			case 0x03:
+// 				/* Ancillary version */
+// 				if (version->len)
+// 					g_string_append(version, ", ");
+// 				g_string_append(version, "Ancillary version ");
+// 				g_string_append(version, tmp_str->str);
+// 				break;
+// 			default:
+// 				sr_info("ols: unknown token 0x%.2x: '%s'",
+// 					token, tmp_str->str);
+// 				break;
+// 			}
+// 			g_string_free(tmp_str, TRUE);
+// 			break;
+// 		case 1:
+// 			/* 32-bit unsigned integer */
+// 			delay_ms = serial_timeout(serial, 4);
+// 			if (serial_read_blocking(serial, &tmp_int, 4, delay_ms) != 4)
+// 				break;
+// 			tmp_int = RB32(&tmp_int);
+// 			sr_dbg("Got metadata key 0x%.2x value 0x%.8x.",
+// 			       key, tmp_int);
+// 			switch (token) {
+// 			case 0x00:
+// 				/* Number of usable channels */
+// 				for (ui = 0; ui < tmp_int; ui++)
+// 					sr_channel_new(sdi, ui, SR_CHANNEL_LOGIC, TRUE,
+// 							ols_channel_names[ui]);
+// 				break;
+// 			case 0x01:
+// 				/* Amount of sample memory available (bytes) */
+// 				devc->max_samples = tmp_int;
+// 				break;
+// 			case 0x02:
+// 				/* Amount of dynamic memory available (bytes) */
+// 				/* what is this for? */
+// 				break;
+// 			case 0x03:
+// 				/* Maximum sample rate (Hz) */
+// 				devc->max_samplerate = tmp_int;
+// 				break;
+// 			case 0x04:
+// 				/* protocol version */
+// 				devc->protocol_version = tmp_int;
+// 				break;
+// 			default:
+// 				sr_info("Unknown token 0x%.2x: 0x%.8x.",
+// 					token, tmp_int);
+// 				break;
+// 			}
+// 			break;
+// 		case 2:
+// 			/* 8-bit unsigned integer */
+// 			delay_ms = serial_timeout(serial, 1);
+// 			if (serial_read_blocking(serial, &tmp_c, 1, delay_ms) != 1)
+// 				break;
+// 			sr_dbg("Got metadata key 0x%.2x value 0x%.2x.",
+// 			       key, tmp_c);
+// 			switch (token) {
+// 			case 0x00:
+// 				/* Number of usable channels */
+// 				for (ui = 0; ui < tmp_c; ui++)
+// 					sr_channel_new(sdi, ui, SR_CHANNEL_LOGIC, TRUE,
+// 							ols_channel_names[ui]);
+// 				break;
+// 			case 0x01:
+// 				/* protocol version */
+// 				devc->protocol_version = tmp_c;
+// 				break;
+// 			default:
+// 				sr_info("Unknown token 0x%.2x: 0x%.2x.",
+// 					token, tmp_c);
+// 				break;
+// 			}
+// 			break;
+// 		default:
+// 			/* unknown type */
+// 			break;
+// 		}
+// 	}
 
-	sdi->model = devname->str;
-	sdi->version = version->str;
-	g_string_free(devname, FALSE);
-	g_string_free(version, FALSE);
+// 	sdi->model = devname->str;
+// 	sdi->version = version->str;
+// 	g_string_free(devname, FALSE);
+// 	g_string_free(version, FALSE);
 
-	return sdi;
-}
+// 	return sdi;
+// }
 
-SR_PRIV int ols_set_samplerate(const struct sr_dev_inst *sdi,
-		const uint64_t samplerate)
-{
-	struct dev_context *devc;
+// SR_PRIV int ols_set_samplerate(const struct sr_dev_inst *sdi,
+// 		const uint64_t samplerate)
+// {
+// 	struct dev_context *devc;
 
-	devc = sdi->priv;
-	if (devc->max_samplerate && samplerate > devc->max_samplerate)
-		return SR_ERR_SAMPLERATE;
+// 	devc = sdi->priv;
+// 	if (devc->max_samplerate && samplerate > devc->max_samplerate)
+// 		return SR_ERR_SAMPLERATE;
 
-	if (samplerate > CLOCK_RATE) {
-		sr_info("Enabling demux mode.");
-		devc->flag_reg |= FLAG_DEMUX;
-		devc->flag_reg &= ~FLAG_FILTER;
-		devc->max_channels = NUM_CHANNELS / 2;
-		devc->cur_samplerate_divider = (CLOCK_RATE * 2 / samplerate) - 1;
-	} else {
-		sr_info("Disabling demux mode.");
-		devc->flag_reg &= ~FLAG_DEMUX;
-		devc->flag_reg |= FLAG_FILTER;
-		devc->max_channels = NUM_CHANNELS;
-		devc->cur_samplerate_divider = (CLOCK_RATE / samplerate) - 1;
-	}
+// 	if (samplerate > CLOCK_RATE) {
+// 		sr_info("Enabling demux mode.");
+// 		devc->flag_reg |= FLAG_DEMUX;
+// 		devc->flag_reg &= ~FLAG_FILTER;
+// 		devc->max_channels = NUM_CHANNELS / 2;
+// 		devc->cur_samplerate_divider = (CLOCK_RATE * 2 / samplerate) - 1;
+// 	} else {
+// 		sr_info("Disabling demux mode.");
+// 		devc->flag_reg &= ~FLAG_DEMUX;
+// 		devc->flag_reg |= FLAG_FILTER;
+// 		devc->max_channels = NUM_CHANNELS;
+// 		devc->cur_samplerate_divider = (CLOCK_RATE / samplerate) - 1;
+// 	}
 
-	/* Calculate actual samplerate used and complain if it is different
-	 * from the requested.
-	 */
-	devc->cur_samplerate = CLOCK_RATE / (devc->cur_samplerate_divider + 1);
-	if (devc->flag_reg & FLAG_DEMUX)
-		devc->cur_samplerate *= 2;
-	if (devc->cur_samplerate != samplerate)
-		sr_info("Can't match samplerate %" PRIu64 ", using %"
-		       PRIu64 ".", samplerate, devc->cur_samplerate);
+// 	/* Calculate actual samplerate used and complain if it is different
+// 	 * from the requested.
+// 	 */
+// 	devc->cur_samplerate = CLOCK_RATE / (devc->cur_samplerate_divider + 1);
+// 	if (devc->flag_reg & FLAG_DEMUX)
+// 		devc->cur_samplerate *= 2;
+// 	if (devc->cur_samplerate != samplerate)
+// 		sr_info("Can't match samplerate %" PRIu64 ", using %"
+// 		       PRIu64 ".", samplerate, devc->cur_samplerate);
 
-	return SR_OK;
-}
+// 	return SR_OK;
+// }
 
-SR_PRIV void abort_acquisition(const struct sr_dev_inst *sdi)
-{
-	struct sr_serial_dev_inst *serial;
+// SR_PRIV void abort_acquisition(const struct sr_dev_inst *sdi)
+// {
+// 	struct sr_serial_dev_inst *serial;
 
-	serial = sdi->conn;
-	serial_source_remove(sdi->session, serial);
+// 	serial = sdi->conn;
+// 	serial_source_remove(sdi->session, serial);
 
-	std_session_send_df_end(sdi);
-}
+// 	std_session_send_df_end(sdi);
+// }
 
 SR_PRIV int ols_receive_data(int fd, int revents, void *cb_data)
 {
