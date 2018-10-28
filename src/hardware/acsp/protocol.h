@@ -21,7 +21,7 @@
 #define LIBSIGROK_HARDWARE_ACSP_PROTOCOL_H
 
 #include <stdint.h>
-#include <string.h>s
+#include <string.h>
 #include <glib.h>
 #include <libsigrok/libsigrok.h>
 #include "libsigrok-internal.h"
