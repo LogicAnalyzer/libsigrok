@@ -202,6 +202,8 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 
 	serial_close(serial);
 
+	sr_dbg("Exiting ACSP Scan after running \"std_scan_complete\"\n ");
+
 	return std_scan_complete(di, g_slist_append(NULL, sdi));
 
 }
@@ -646,8 +648,8 @@ SR_PRIV struct sr_dev_driver acsp_driver_info = {
 	.config_get = config_get,
 	.config_set = config_set,
 	.config_list = config_list,
-	.dev_open = dev_open,
-	.dev_close = dev_close,
+	.dev_open = std_serial_dev_open,
+	.dev_close = std_serial_dev_close,
 	.dev_acquisition_start = dev_acquisition_start,
 	.dev_acquisition_stop = dev_acquisition_stop,
 	.context = NULL,
