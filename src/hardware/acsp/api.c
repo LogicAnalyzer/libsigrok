@@ -179,7 +179,7 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 
 	if (sp_input_waiting(serial->data) != 0) {
 		/* Got metadata. */
-		sdi = get_metadata(serial);
+		sdi = acsp_get_metadata(serial);
 	} else {
 		/* Not an acsp -- some other board that uses the sump protocol. */
 		sr_info("Device does not support metadata.");
