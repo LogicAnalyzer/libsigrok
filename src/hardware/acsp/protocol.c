@@ -183,6 +183,7 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 		}
 		type = key >> 5;
 		token = key & 0x1f;
+		sr_dbg("Key: 0x%.2x Type: 0x%.2x Token: 0x%.2x", key, type, token);
 		switch (type) {
 		case 0:
 			/* NULL-terminated string */
