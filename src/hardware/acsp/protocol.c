@@ -153,9 +153,9 @@ SR_PRIV struct dev_context *acsp_dev_new(void)
 	return devc;
 }
 
-SR_PRIV struct sr_dev_inst *get_metadata(struct sr_serial_dev_inst *serial)
+SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 {
-	sr_dbg("Now Entering sr_dev_inst *get_metadata\n");
+	sr_dbg("Now Entering sr_dev_inst *acsp_get_metadata\n");
 	struct sr_dev_inst *sdi;
 	struct dev_context *devc;
 	uint32_t tmp_int, ui;
