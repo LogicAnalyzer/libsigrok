@@ -57,95 +57,95 @@
 // 	return SR_OK;
 // }
 
-// SR_PRIV int ols_send_reset(struct sr_serial_dev_inst *serial)
-// {
-// 	unsigned int i;
+SR_PRIV int ols_send_reset(struct sr_serial_dev_inst *serial)
+{
+	unsigned int i;
 
-// 	for (i = 0; i < 5; i++) {
-// 		if (send_shortcommand(serial, CMD_RESET) != SR_OK)
-// 			return SR_ERR;
-// 	}
+	for (i = 0; i < 5; i++) {
+		if (send_shortcommand(serial, CMD_RESET) != SR_OK)
+			return SR_ERR;
+	}
 
-// 	return SR_OK;
-// }
+	return SR_OK;
+}
 
-// /* Configures the channel mask based on which channels are enabled. */
-// SR_PRIV void ols_channel_mask(const struct sr_dev_inst *sdi)
-// {
-// 	struct dev_context *devc;
-// 	struct sr_channel *channel;
-// 	const GSList *l;
+/* Configures the channel mask based on which channels are enabled. */
+SR_PRIV void ols_channel_mask(const struct sr_dev_inst *sdi)
+{
+	struct dev_context *devc;
+	struct sr_channel *channel;
+	const GSList *l;
 
-// 	devc = sdi->priv;
+	devc = sdi->priv;
 
-// 	devc->channel_mask = 0;
-// 	for (l = sdi->channels; l; l = l->next) {
-// 		channel = l->data;
-// 		if (channel->enabled)
-// 			devc->channel_mask |= 1 << channel->index;
-// 	}
-// }
+	devc->channel_mask = 0;
+	for (l = sdi->channels; l; l = l->next) {
+		channel = l->data;
+		if (channel->enabled)
+			devc->channel_mask |= 1 << channel->index;
+	}
+}
 
-// SR_PRIV int ols_convert_trigger(const struct sr_dev_inst *sdi)
-// {
-// 	struct dev_context *devc;
-// 	struct sr_trigger *trigger;
-// 	struct sr_trigger_stage *stage;
-// 	struct sr_trigger_match *match;
-// 	const GSList *l, *m;
-// 	int i;
+SR_PRIV int ols_convert_trigger(const struct sr_dev_inst *sdi)
+{
+	struct dev_context *devc;
+	struct sr_trigger *trigger;
+	struct sr_trigger_stage *stage;
+	struct sr_trigger_match *match;
+	const GSList *l, *m;
+	int i;
 
-// 	devc = sdi->priv;
+	devc = sdi->priv;
 
-// 	devc->num_stages = 0;
-// 	for (i = 0; i < NUM_TRIGGER_STAGES; i++) {
-// 		devc->trigger_mask[i] = 0;
-// 		devc->trigger_value[i] = 0;
-// 	}
+	devc->num_stages = 0;
+	for (i = 0; i < NUM_TRIGGER_STAGES; i++) {
+		devc->trigger_mask[i] = 0;
+		devc->trigger_value[i] = 0;
+	}
 
-// 	if (!(trigger = sr_session_trigger_get(sdi->session)))
-// 		return SR_OK;
+	if (!(trigger = sr_session_trigger_get(sdi->session)))
+		return SR_OK;
 
-// 	devc->num_stages = g_slist_length(trigger->stages);
-// 	if (devc->num_stages > NUM_TRIGGER_STAGES) {
-// 		sr_err("This device only supports %d trigger stages.",
-// 				NUM_TRIGGER_STAGES);
-// 		return SR_ERR;
-// 	}
+	devc->num_stages = g_slist_length(trigger->stages);
+	if (devc->num_stages > NUM_TRIGGER_STAGES) {
+		sr_err("This device only supports %d trigger stages.",
+				NUM_TRIGGER_STAGES);
+		return SR_ERR;
+	}
 
-// 	for (l = trigger->stages; l; l = l->next) {
-// 		stage = l->data;
-// 		for (m = stage->matches; m; m = m->next) {
-// 			match = m->data;
-// 			if (!match->channel->enabled)
-// 				/* Ignore disabled channels with a trigger. */
-// 				continue;
-// 			devc->trigger_mask[stage->stage] |= 1 << match->channel->index;
-// 			if (match->match == SR_TRIGGER_ONE)
-// 				devc->trigger_value[stage->stage] |= 1 << match->channel->index;
-// 		}
-// 	}
+	for (l = trigger->stages; l; l = l->next) {
+		stage = l->data;
+		for (m = stage->matches; m; m = m->next) {
+			match = m->data;
+			if (!match->channel->enabled)
+				/* Ignore disabled channels with a trigger. */
+				continue;
+			devc->trigger_mask[stage->stage] |= 1 << match->channel->index;
+			if (match->match == SR_TRIGGER_ONE)
+				devc->trigger_value[stage->stage] |= 1 << match->channel->index;
+		}
+	}
 
-// 	return SR_OK;
-// }
+	return SR_OK;
+}
 
-// SR_PRIV struct dev_context *ols_dev_new(void)
-// {
-// 	struct dev_context *devc;
+SR_PRIV struct dev_context *ols_dev_new(void)
+{
+	struct dev_context *devc;
 
-// 	devc = g_malloc0(sizeof(struct dev_context));
+	devc = g_malloc0(sizeof(struct dev_context));
 
-// 	/* Device-specific settings */
-// 	devc->max_samples = devc->max_samplerate = devc->protocol_version = 0;
+	/* Device-specific settings */
+	devc->max_samples = devc->max_samplerate = devc->protocol_version = 0;
 
-// 	/* Acquisition settings */
-// 	devc->limit_samples = devc->capture_ratio = 0;
-// 	devc->trigger_at = -1;
-// 	devc->channel_mask = 0xffffffff;
-// 	devc->flag_reg = 0;
+	/* Acquisition settings */
+	devc->limit_samples = devc->capture_ratio = 0;
+	devc->trigger_at = -1;
+	devc->channel_mask = 0xffffffff;
+	devc->flag_reg = 0;
 
-// 	return devc;
-// }
+	return devc;
+}
 
 // SR_PRIV struct sr_dev_inst *get_metadata(struct sr_serial_dev_inst *serial)
 // {
@@ -286,41 +286,41 @@
 // 	return sdi;
 // }
 
-// SR_PRIV int ols_set_samplerate(const struct sr_dev_inst *sdi,
-// 		const uint64_t samplerate)
-// {
-// 	struct dev_context *devc;
+SR_PRIV int ols_set_samplerate(const struct sr_dev_inst *sdi,
+		const uint64_t samplerate)
+{
+	struct dev_context *devc;
 
-// 	devc = sdi->priv;
-// 	if (devc->max_samplerate && samplerate > devc->max_samplerate)
-// 		return SR_ERR_SAMPLERATE;
+	devc = sdi->priv;
+	if (devc->max_samplerate && samplerate > devc->max_samplerate)
+		return SR_ERR_SAMPLERATE;
 
-// 	if (samplerate > CLOCK_RATE) {
-// 		sr_info("Enabling demux mode.");
-// 		devc->flag_reg |= FLAG_DEMUX;
-// 		devc->flag_reg &= ~FLAG_FILTER;
-// 		devc->max_channels = NUM_CHANNELS / 2;
-// 		devc->cur_samplerate_divider = (CLOCK_RATE * 2 / samplerate) - 1;
-// 	} else {
-// 		sr_info("Disabling demux mode.");
-// 		devc->flag_reg &= ~FLAG_DEMUX;
-// 		devc->flag_reg |= FLAG_FILTER;
-// 		devc->max_channels = NUM_CHANNELS;
-// 		devc->cur_samplerate_divider = (CLOCK_RATE / samplerate) - 1;
-// 	}
+	if (samplerate > CLOCK_RATE) {
+		sr_info("Enabling demux mode.");
+		devc->flag_reg |= FLAG_DEMUX;
+		devc->flag_reg &= ~FLAG_FILTER;
+		devc->max_channels = NUM_CHANNELS / 2;
+		devc->cur_samplerate_divider = (CLOCK_RATE * 2 / samplerate) - 1;
+	} else {
+		sr_info("Disabling demux mode.");
+		devc->flag_reg &= ~FLAG_DEMUX;
+		devc->flag_reg |= FLAG_FILTER;
+		devc->max_channels = NUM_CHANNELS;
+		devc->cur_samplerate_divider = (CLOCK_RATE / samplerate) - 1;
+	}
 
-// 	/* Calculate actual samplerate used and complain if it is different
-// 	 * from the requested.
-// 	 */
-// 	devc->cur_samplerate = CLOCK_RATE / (devc->cur_samplerate_divider + 1);
-// 	if (devc->flag_reg & FLAG_DEMUX)
-// 		devc->cur_samplerate *= 2;
-// 	if (devc->cur_samplerate != samplerate)
-// 		sr_info("Can't match samplerate %" PRIu64 ", using %"
-// 		       PRIu64 ".", samplerate, devc->cur_samplerate);
+	/* Calculate actual samplerate used and complain if it is different
+	 * from the requested.
+	 */
+	devc->cur_samplerate = CLOCK_RATE / (devc->cur_samplerate_divider + 1);
+	if (devc->flag_reg & FLAG_DEMUX)
+		devc->cur_samplerate *= 2;
+	if (devc->cur_samplerate != samplerate)
+		sr_info("Can't match samplerate %" PRIu64 ", using %"
+		       PRIu64 ".", samplerate, devc->cur_samplerate);
 
-// 	return SR_OK;
-// }
+	return SR_OK;
+}
 
 // SR_PRIV void abort_acquisition(const struct sr_dev_inst *sdi)
 // {
