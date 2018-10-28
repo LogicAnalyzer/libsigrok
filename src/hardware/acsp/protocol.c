@@ -539,4 +539,5 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 
 		serial_flush(serial);
 		abort_acquisition(sdi);
+	}
 }
