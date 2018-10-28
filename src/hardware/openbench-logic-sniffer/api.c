@@ -39,7 +39,7 @@ static const uint32_t devopts[] = {
 	SR_CONF_EXTERNAL_CLOCK | SR_CONF_SET,
 	SR_CONF_PATTERN_MODE | SR_CONF_GET | SR_CONF_SET | SR_CONF_LIST,
 	SR_CONF_SWAP | SR_CONF_SET,
-	SR_CONF_GET | SR_CONF_SET,
+	SR_CONF_RLE | SR_CONF_GET | SR_CONF_SET,
 };
 
 static const int32_t trigger_matches[] = {
@@ -87,7 +87,6 @@ static const uint64_t samplerates[] = {
 
 static GSList *scan(struct sr_dev_driver *di, GSList *options)
 {
-	sr_dbg("Entering Scan");
 	struct sr_config *src;
 	struct sr_dev_inst *sdi;
 	struct sr_serial_dev_inst *serial;
@@ -191,7 +190,6 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 static int config_get(uint32_t key, GVariant **data,
 	const struct sr_dev_inst *sdi, const struct sr_channel_group *cg)
 {
-	sr_dbg("Entering config_get");
 	struct dev_context *devc;
 
 	(void)cg;
@@ -232,7 +230,6 @@ static int config_get(uint32_t key, GVariant **data,
 static int config_set(uint32_t key, GVariant *data,
 	const struct sr_dev_inst *sdi, const struct sr_channel_group *cg)
 {
-	sr_dbg("Enetering config_set");
 	struct dev_context *devc;
 	uint16_t flag;
 	uint64_t tmp_u64;
@@ -312,7 +309,6 @@ static int config_set(uint32_t key, GVariant *data,
 static int config_list(uint32_t key, GVariant **data,
 	const struct sr_dev_inst *sdi, const struct sr_channel_group *cg)
 {
-	sr_dbg("Entering config_list");
 	struct dev_context *devc;
 	int num_ols_changrp, i;
 
@@ -361,7 +357,6 @@ static int config_list(uint32_t key, GVariant **data,
 
 static int set_trigger(const struct sr_dev_inst *sdi, int stage)
 {
-	sr_dbg("Entering set_tringer");
 	struct dev_context *devc;
 	struct sr_serial_dev_inst *serial;
 	uint8_t cmd, arg[4];
@@ -399,7 +394,6 @@ static int set_trigger(const struct sr_dev_inst *sdi, int stage)
 
 static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 {
-	sr_dbg("Entering dev_acquisition_start");
 	struct dev_context *devc;
 	struct sr_serial_dev_inst *serial;
 	uint16_t samplecount, readcount, delaycount;
@@ -506,7 +500,7 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	/* Reset all operational states. */
 	devc->rle_count = devc->num_transfers = 0;
 	devc->num_samples = devc->num_bytes = 0;
-	devc->cnt_samples = devc->cnt_samples_rle = 0;
+	devc->cnt_bytes = devc->cnt_samples = devc->cnt_samples_rle = 0;
 	memset(devc->sample, 0, 4);
 
 	std_session_send_df_header(sdi);
@@ -522,15 +516,14 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 
 static int dev_acquisition_stop(struct sr_dev_inst *sdi)
 {
-	sr_dbg("Entering dev_acquisition_stop");
 	abort_acquisition(sdi);
 
 	return SR_OK;
 }
 
 static struct sr_dev_driver ols_driver_info = {
-	.name = "ACSP",
-	.longname = "ACSP Logic Analyzer",
+	.name = "ols",
+	.longname = "Openbench Logic Sniffer",
 	.api_version = 1,
 	.init = std_init,
 	.cleanup = std_cleanup,
@@ -546,5 +539,4 @@ static struct sr_dev_driver ols_driver_info = {
 	.dev_acquisition_stop = dev_acquisition_stop,
 	.context = NULL,
 };
-
 SR_REGISTER_DEV_DRIVER(ols_driver_info);
