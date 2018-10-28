@@ -107,7 +107,7 @@ SR_PRIV int acsp_send_reset(struct sr_serial_dev_inst *serial);
 SR_PRIV void acsp_channel_mask(const struct sr_dev_inst *sdi);
 SR_PRIV int acsp_convert_trigger(const struct sr_dev_inst *sdi);
 SR_PRIV struct dev_context *acsp_dev_new(void);
-SR_PRIV struct sr_dev_inst *get_metadata(struct sr_serial_dev_inst *serial);
+SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial);
 SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 		uint64_t samplerate);
 SR_PRIV void acsp_abort_acquisition(const struct sr_dev_inst *sdi);
