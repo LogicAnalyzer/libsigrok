@@ -20,10 +20,10 @@
 #include <config.h>
 #include "protocol.h"
 
-SR_PRIV int send_shortcommand(struct sr_serial_dev_inst *serial,
+SR_PRIV int acsp_send_shortcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command)
 {
-	sr_dbg("Now Entering send_shortcommand\n");
+	sr_dbg("Now Entering acsp_send_shortcommand\n");
 	char buf[1];
 
 	sr_dbg("Sending cmd 0x%.2x.", command);
@@ -37,10 +37,10 @@ SR_PRIV int send_shortcommand(struct sr_serial_dev_inst *serial,
 	return SR_OK;
 }
 
-SR_PRIV int send_longcommand(struct sr_serial_dev_inst *serial,
+SR_PRIV int acsp_send_longcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command, uint8_t *data)
 {
-	sr_dbg("Now Entering send_longcommand\n");
+	sr_dbg("Now Entering acsp_send_longcommand\n");
 	char buf[5];
 
 	sr_dbg("Sending cmd 0x%.2x data 0x%.2x%.2x%.2x%.2x.", command,
@@ -65,7 +65,7 @@ SR_PRIV int acsp_send_reset(struct sr_serial_dev_inst *serial)
 	unsigned int i;
 
 	for (i = 0; i < 5; i++) {
-		if (send_shortcommand(serial, CMD_RESET) != SR_OK)
+		if (acsp_send_shortcommand(serial, CMD_RESET) != SR_OK)
 			return SR_ERR;
 	}
 
@@ -330,9 +330,9 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 	return SR_OK;
 }
 
-SR_PRIV void abort_acquisition(const struct sr_dev_inst *sdi)
+SR_PRIV void acsp_abort_acquisition(const struct sr_dev_inst *sdi)
 {
-	sr_dbg("Now Entering abort_acquisition\n");
+	sr_dbg("Now Entering acsp_abort_acquisition\n");
 	struct sr_serial_dev_inst *serial;
 
 	serial = sdi->conn;
@@ -356,7 +356,7 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 	// 	return TRUE;
 
 	// if (revents == G_IO_IN) {
-	// 	/* TODO */
+	// 	/* TODO */ƒ
 	// }
 
 	// return TRUE;
@@ -538,6 +538,6 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 		g_free(devc->raw_sample_buf);
 
 		serial_flush(serial);
-		abort_acquisition(sdi);
+		acsp_abort_acquisition(sdi);
 	}
 }
