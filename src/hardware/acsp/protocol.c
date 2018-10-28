@@ -260,7 +260,7 @@ SR_PRIV struct sr_dev_inst *get_metadata(struct sr_serial_dev_inst *serial)
 			delay_ms = serial_timeout(serial, 1);
 			if (serial_read_blocking(serial, &tmp_c, 1, delay_ms) != 1)
 				break;
-			sr_dbg("Got metadata key 0x%.2x value 0x%.2x.",
+			sr_dbg("Got metadata key 0x%.2x value 0x%.2x. token 0x%.2x",
 			       key, tmp_c);
 			switch (token) {
 			case 0x00:
