@@ -22,8 +22,8 @@
 
 SR_PRIV int send_shortcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command)
-sr_dbg("Now Entering send_shortcommand\n")
 {
+	sr_dbg("Now Entering send_shortcommand\n")
 	char buf[1];
 
 	sr_dbg("Sending cmd 0x%.2x.", command);
@@ -39,8 +39,8 @@ sr_dbg("Now Entering send_shortcommand\n")
 
 SR_PRIV int send_longcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command, uint8_t *data)
-sr_dbg("Now Entering send_longcommand\n")
 {
+	sr_dbg("Now Entering send_longcommand\n")
 	char buf[5];
 
 	sr_dbg("Sending cmd 0x%.2x data 0x%.2x%.2x%.2x%.2x.", command,
@@ -295,8 +295,8 @@ SR_PRIV struct sr_dev_inst *get_metadata(struct sr_serial_dev_inst *serial)
 
 SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 		const uint64_t samplerate)
-sr_dbg("Now Entering acsp_set_samplerate\n")
 {
+	sr_dbg("Now Entering acsp_set_samplerate\n")
 	struct dev_context *devc;
 
 	devc = sdi->priv;
