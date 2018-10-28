@@ -23,7 +23,7 @@
 SR_PRIV int send_shortcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command)
 {
-	sr_dbg("Now Entering send_shortcommand\n")
+	sr_dbg("Now Entering send_shortcommand\n");
 	char buf[1];
 
 	sr_dbg("Sending cmd 0x%.2x.", command);
@@ -40,7 +40,7 @@ SR_PRIV int send_shortcommand(struct sr_serial_dev_inst *serial,
 SR_PRIV int send_longcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command, uint8_t *data)
 {
-	sr_dbg("Now Entering send_longcommand\n")
+	sr_dbg("Now Entering send_longcommand\n");
 	char buf[5];
 
 	sr_dbg("Sending cmd 0x%.2x data 0x%.2x%.2x%.2x%.2x.", command,
@@ -61,7 +61,7 @@ SR_PRIV int send_longcommand(struct sr_serial_dev_inst *serial,
 
 SR_PRIV int acsp_send_reset(struct sr_serial_dev_inst *serial)
 {
-	sr_dbg("Now Entering acsp_send_reset\n")
+	sr_dbg("Now Entering acsp_send_reset\n");
 	unsigned int i;
 
 	for (i = 0; i < 5; i++) {
@@ -75,7 +75,7 @@ SR_PRIV int acsp_send_reset(struct sr_serial_dev_inst *serial)
 /* Configures the channel mask based on which channels are enabled. */
 SR_PRIV void acsp_channel_mask(const struct sr_dev_inst *sdi)
 {
-	sr_dbg("Now Entering acsp_channel_mask\n")
+	sr_dbg("Now Entering acsp_channel_mask\n");
 	struct dev_context *devc;
 	struct sr_channel *channel;
 	const GSList *l;
@@ -92,7 +92,7 @@ SR_PRIV void acsp_channel_mask(const struct sr_dev_inst *sdi)
 
 SR_PRIV int acsp_convert_trigger(const struct sr_dev_inst *sdi)
 {
-	sr_dbg("Now Entering acsp_convert_trigger\n")
+	sr_dbg("Now Entering acsp_convert_trigger\n");
 	struct dev_context *devc;
 	struct sr_trigger *trigger;
 	struct sr_trigger_stage *stage;
@@ -136,7 +136,7 @@ SR_PRIV int acsp_convert_trigger(const struct sr_dev_inst *sdi)
 
 SR_PRIV struct dev_context *acsp_dev_new(void)
 {
-	sr_dbg("Now Entering dev_context *acsp_dev_new(void)\n")
+	sr_dbg("Now Entering dev_context *acsp_dev_new(void)\n");
 	struct dev_context *devc;
 
 	devc = g_malloc0(sizeof(struct dev_context));
@@ -155,7 +155,7 @@ SR_PRIV struct dev_context *acsp_dev_new(void)
 
 SR_PRIV struct sr_dev_inst *get_metadata(struct sr_serial_dev_inst *serial)
 {
-	sr_dbg("Now Entering sr_dev_inst *get_metadata\n")
+	sr_dbg("Now Entering sr_dev_inst *get_metadata\n");
 	struct sr_dev_inst *sdi;
 	struct dev_context *devc;
 	uint32_t tmp_int, ui;
@@ -296,7 +296,7 @@ SR_PRIV struct sr_dev_inst *get_metadata(struct sr_serial_dev_inst *serial)
 SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 		const uint64_t samplerate)
 {
-	sr_dbg("Now Entering acsp_set_samplerate\n")
+	sr_dbg("Now Entering acsp_set_samplerate\n");
 	struct dev_context *devc;
 
 	devc = sdi->priv;
@@ -332,7 +332,7 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 
 SR_PRIV void abort_acquisition(const struct sr_dev_inst *sdi)
 {
-	sr_dbg("Now Entering abort_acquisition\n")
+	sr_dbg("Now Entering abort_acquisition\n");
 	struct sr_serial_dev_inst *serial;
 
 	serial = sdi->conn;
@@ -343,7 +343,7 @@ SR_PRIV void abort_acquisition(const struct sr_dev_inst *sdi)
 
 SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 {
-	sr_dbg("Now Entering acsp_receive_data\n")
+	sr_dbg("Now Entering acsp_receive_data\n");
 	// const struct sr_dev_inst *sdi;
 	// struct dev_context *devc;
 
