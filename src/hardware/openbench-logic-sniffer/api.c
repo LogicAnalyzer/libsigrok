@@ -87,104 +87,104 @@ static const uint64_t samplerates[] = {
 
 static GSList *scan(struct sr_dev_driver *di, GSList *options)
 {
-	struct sr_config *src;
-	struct sr_dev_inst *sdi;
-	struct sr_serial_dev_inst *serial;
-	GSList *l;
-	int ret;
-	unsigned int i;
-	const char *conn, *serialcomm;
-	char buf[8];
+	// struct sr_config *src;
+	// struct sr_dev_inst *sdi;
+	// struct sr_serial_dev_inst *serial;
+	// GSList *l;
+	// int ret;
+	// unsigned int i;
+	// const char *conn, *serialcomm;
+	// char buf[8];
 
-	conn = serialcomm = NULL;
-	for (l = options; l; l = l->next) {
-		src = l->data;
-		switch (src->key) {
-		case SR_CONF_CONN:
-			conn = g_variant_get_string(src->data, NULL);
-			break;
-		case SR_CONF_SERIALCOMM:
-			serialcomm = g_variant_get_string(src->data, NULL);
-			break;
-		}
-	}
-	if (!conn)
-		return NULL;
+	// conn = serialcomm = NULL;
+	// for (l = options; l; l = l->next) {
+	// 	src = l->data;
+	// 	switch (src->key) {
+	// 	case SR_CONF_CONN:
+	// 		conn = g_variant_get_string(src->data, NULL);
+	// 		break;
+	// 	case SR_CONF_SERIALCOMM:
+	// 		serialcomm = g_variant_get_string(src->data, NULL);
+	// 		break;
+	// 	}
+	// }
+	// if (!conn)
+	// 	return NULL;
 
-	if (!serialcomm)
-		serialcomm = SERIALCOMM;
+	// if (!serialcomm)
+	// 	serialcomm = SERIALCOMM;
 
-	serial = sr_serial_dev_inst_new(conn, serialcomm);
+	// serial = sr_serial_dev_inst_new(conn, serialcomm);
 
-	/* The discovery procedure is like this: first send the Reset
-	 * command (0x00) 5 times, since the device could be anywhere
-	 * in a 5-byte command. Then send the ID command (0x02).
-	 * If the device responds with 4 bytes ("OLS1" or "SLA1"), we
-	 * have a match.
-	 */
-	sr_info("Probing %s.", conn);
-	if (serial_open(serial, SERIAL_RDWR) != SR_OK)
-		return NULL;
+	// /* The discovery procedure is like this: first send the Reset
+	//  * command (0x00) 5 times, since the device could be anywhere
+	//  * in a 5-byte command. Then send the ID command (0x02).
+	//  * If the device responds with 4 bytes ("OLS1" or "SLA1"), we
+	//  * have a match.
+	//  */
+	// sr_info("Probing %s.", conn);
+	// if (serial_open(serial, SERIAL_RDWR) != SR_OK)
+	// 	return NULL;
 
-	if (ols_send_reset(serial) != SR_OK) {
-		serial_close(serial);
-		sr_err("Could not use port %s. Quitting.", conn);
-		return NULL;
-	}
-	send_shortcommand(serial, CMD_ID);
+	// if (ols_send_reset(serial) != SR_OK) {
+	// 	serial_close(serial);
+	// 	sr_err("Could not use port %s. Quitting.", conn);
+	// 	return NULL;
+	// }
+	// send_shortcommand(serial, CMD_ID);
 
-	g_usleep(RESPONSE_DELAY_US);
+	// g_usleep(RESPONSE_DELAY_US);
 
-	if (sp_input_waiting(serial->data) == 0) {
-		sr_dbg("Didn't get any reply.");
-		return NULL;
-	}
+	// if (sp_input_waiting(serial->data) == 0) {
+	// 	sr_dbg("Didn't get any reply.");
+	// 	return NULL;
+	// }
 
-	ret = serial_read_blocking(serial, buf, 4, serial_timeout(serial, 4));
-	if (ret != 4) {
-		sr_err("Invalid reply (expected 4 bytes, got %d).", ret);
-		return NULL;
-	}
+	// ret = serial_read_blocking(serial, buf, 4, serial_timeout(serial, 4));
+	// if (ret != 4) {
+	// 	sr_err("Invalid reply (expected 4 bytes, got %d).", ret);
+	// 	return NULL;
+	// }
 
-	if (strncmp(buf, "1SLO", 4) && strncmp(buf, "1ALS", 4)) {
-		sr_err("Invalid reply (expected '1SLO' or '1ALS', got "
-		       "'%c%c%c%c').", buf[0], buf[1], buf[2], buf[3]);
-		return NULL;
-	}
+	// if (strncmp(buf, "1SLO", 4) && strncmp(buf, "1ALS", 4)) {
+	// 	sr_err("Invalid reply (expected '1SLO' or '1ALS', got "
+	// 	       "'%c%c%c%c').", buf[0], buf[1], buf[2], buf[3]);
+	// 	return NULL;
+	// }
 
-	/* Definitely using the OLS protocol, check if it supports
-	 * the metadata command.
-	 */
-	send_shortcommand(serial, CMD_METADATA);
+	// /* Definitely using the OLS protocol, check if it supports
+	//  * the metadata command.
+	//  */
+	// send_shortcommand(serial, CMD_METADATA);
 
-	g_usleep(RESPONSE_DELAY_US);
+	// g_usleep(RESPONSE_DELAY_US);
 
-	if (sp_input_waiting(serial->data) != 0) {
-		/* Got metadata. */
-		sdi = get_metadata(serial);
-	} else {
-		/* Not an OLS -- some other board that uses the sump protocol. */
-		sr_info("Device does not support metadata.");
-		sdi = g_malloc0(sizeof(struct sr_dev_inst));
-		sdi->status = SR_ST_INACTIVE;
-		sdi->vendor = g_strdup("Sump");
-		sdi->model = g_strdup("Logic Analyzer");
-		sdi->version = g_strdup("v1.0");
-		for (i = 0; i < ARRAY_SIZE(ols_channel_names); i++)
-			sr_channel_new(sdi, i, SR_CHANNEL_LOGIC, TRUE,
-					ols_channel_names[i]);
-		sdi->priv = ols_dev_new();
-	}
-	/* Configure samplerate and divider. */
-	if (ols_set_samplerate(sdi, DEFAULT_SAMPLERATE) != SR_OK)
-		sr_dbg("Failed to set default samplerate (%"PRIu64").",
-				DEFAULT_SAMPLERATE);
-	sdi->inst_type = SR_INST_SERIAL;
-	sdi->conn = serial;
+	// if (sp_input_waiting(serial->data) != 0) {
+	// 	/* Got metadata. */
+	// 	sdi = get_metadata(serial);
+	// } else {
+	// 	/* Not an OLS -- some other board that uses the sump protocol. */
+	// 	sr_info("Device does not support metadata.");
+	// 	sdi = g_malloc0(sizeof(struct sr_dev_inst));
+	// 	sdi->status = SR_ST_INACTIVE;
+	// 	sdi->vendor = g_strdup("Sump");
+	// 	sdi->model = g_strdup("Logic Analyzer");
+	// 	sdi->version = g_strdup("v1.0");
+	// 	for (i = 0; i < ARRAY_SIZE(ols_channel_names); i++)
+	// 		sr_channel_new(sdi, i, SR_CHANNEL_LOGIC, TRUE,
+	// 				ols_channel_names[i]);
+	// 	sdi->priv = ols_dev_new();
+	// }
+	// /* Configure samplerate and divider. */
+	// if (ols_set_samplerate(sdi, DEFAULT_SAMPLERATE) != SR_OK)
+	// 	sr_dbg("Failed to set default samplerate (%"PRIu64").",
+	// 			DEFAULT_SAMPLERATE);
+	// sdi->inst_type = SR_INST_SERIAL;
+	// sdi->conn = serial;
 
-	serial_close(serial);
+	// serial_close(serial);
 
-	return std_scan_complete(di, g_slist_append(NULL, sdi));
+	// return std_scan_complete(di, g_slist_append(NULL, sdi));
 }
 
 static int config_get(uint32_t key, GVariant **data,
