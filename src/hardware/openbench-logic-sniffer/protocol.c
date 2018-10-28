@@ -322,8 +322,6 @@ SR_PRIV int ols_set_samplerate(const struct sr_dev_inst *sdi,
 	return SR_OK;
 }
 
-
-
 SR_PRIV void abort_acquisition(const struct sr_dev_inst *sdi)
 {
 	struct sr_serial_dev_inst *serial;
