@@ -96,7 +96,7 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 	// drvc = di->context;
 	// drvc->instances = NULL;
 
-	/* TODO: scan for devices, either based on a SR_CONF_CONN option
+	/* TODO: scan for devices, either based on a SR_CONF_CONN optionff
 	 * or on a USB scan. */
 
 
@@ -149,7 +149,7 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 		sr_err("Could not use port %s. Quitting.", conn);
 		return NULL;
 	}
-	send_shortcommand(serial, CMD_ID);
+	acsp_send_shortcommand(serial, CMD_ID);
 
 	g_usleep(RESPONSE_DELAY_US);
 
@@ -173,7 +173,7 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 	/* Definitely using the acsp protocol, check if it supports
 	 * the metadata command.
 	 */
-	send_shortcommand(serial, CMD_METADATA);
+	acsp_send_shortcommand(serial, CMD_METADATA);
 
 	g_usleep(RESPONSE_DELAY_US);
 
@@ -465,7 +465,7 @@ static int set_trigger(const struct sr_dev_inst *sdi, int stage)
 	arg[1] = (devc->trigger_mask[stage] >> 8) & 0xff;
 	arg[2] = (devc->trigger_mask[stage] >> 16) & 0xff;
 	arg[3] = (devc->trigger_mask[stage] >> 24) & 0xff;
-	if (send_longcommand(serial, cmd, arg) != SR_OK)
+	if (acsp_send_longcommand(serial, cmd, arg) != SR_OK)
 		return SR_ERR;
 
 	cmd = CMD_SET_TRIGGER_VALUE + stage * 4;
@@ -473,7 +473,7 @@ static int set_trigger(const struct sr_dev_inst *sdi, int stage)
 	arg[1] = (devc->trigger_value[stage] >> 8) & 0xff;
 	arg[2] = (devc->trigger_value[stage] >> 16) & 0xff;
 	arg[3] = (devc->trigger_value[stage] >> 24) & 0xff;
-	if (send_longcommand(serial, cmd, arg) != SR_OK)
+	if (acsp_send_longcommand(serial, cmd, arg) != SR_OK)
 		return SR_ERR;
 
 	cmd = CMD_SET_TRIGGER_CONFIG + stage * 4;
@@ -482,7 +482,7 @@ static int set_trigger(const struct sr_dev_inst *sdi, int stage)
 	if (stage == devc->num_stages)
 		/* Last stage, fire when this one matches. */
 		arg[3] |= TRIGGER_START;
-	if (send_longcommand(serial, cmd, arg) != SR_OK)
+	if (acsp_send_longcommand(serial, cmd, arg) != SR_OK)
 		return SR_ERR;
 
 	return SR_OK;
@@ -567,7 +567,7 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	arg[1] = (devc->cur_samplerate_divider & 0xff00) >> 8;
 	arg[2] = (devc->cur_samplerate_divider & 0xff0000) >> 16;
 	arg[3] = 0x00;
-	if (send_longcommand(serial, CMD_SET_DIVIDER, arg) != SR_OK)
+	if (acsp_send_longcommand(serial, CMD_SET_DIVIDER, arg) != SR_OK)
 		return SR_ERR;
 
 	/* Send sample limit and pre/post-trigger capture ratio. */
@@ -577,7 +577,7 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	arg[1] = ((readcount - 1) & 0xff00) >> 8;
 	arg[2] = ((delaycount - 1) & 0xff);
 	arg[3] = ((delaycount - 1) & 0xff00) >> 8;
-	if (send_longcommand(serial, CMD_CAPTURE_SIZE, arg) != SR_OK)
+	if (acsp_send_longcommand(serial, CMD_CAPTURE_SIZE, arg) != SR_OK)
 		return SR_ERR;
 
 	/* Flag register. */
@@ -595,11 +595,11 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	arg[0] = devc->flag_reg & 0xff;
 	arg[1] = devc->flag_reg >> 8;
 	arg[2] = arg[3] = 0x00;
-	if (send_longcommand(serial, CMD_SET_FLAGS, arg) != SR_OK)
+	if (acsp_send_longcommand(serial, CMD_SET_FLAGS, arg) != SR_OK)
 		return SR_ERR;
 
 	/* Start acquisition on the device. */
-	if (send_shortcommand(serial, CMD_RUN) != SR_OK)
+	if (acsp_send_shortcommand(serial, CMD_RUN) != SR_OK)
 		return SR_ERR;
 
 	/* Reset all operational states. */
@@ -629,7 +629,7 @@ static int dev_acquisition_stop(struct sr_dev_inst *sdi)
 
 	/*----------above is the given code, below is from O L S----------*/
 
-	abort_acquisition(sdi);
+	acsp_abort_acquisition(sdi);
 
 	return SR_OK;
 }
