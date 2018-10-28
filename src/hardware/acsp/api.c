@@ -209,33 +209,34 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 }
 
 
-static int dev_open(struct sr_dev_inst *sdi)
-{
-	// (void)sdi;
+// static int dev_open(struct sr_dev_inst *sdi)
+// {
+// 	// (void)sdi;
 
-	// /* TODO: get handle from sdi->conn and open it. */
+// 	// /* TODO: get handle from sdi->conn and open it. */
 
-	// return SR_OK;
+// 	// return SR_OK;
 
-	/*----------above is the given code, below is from O L S----------*/
-	// not implemented
-}
+// 	/*----------above is the given code, below is from O L S----------*/
+// 	// not implemented
+// }
 
-static int dev_close(struct sr_dev_inst *sdi)
-{
-	// (void)sdi;
+// static int dev_close(struct sr_dev_inst *sdi)
+// {
+// 	// (void)sdi;
 
-	// /* TODO: get handle from sdi->conn and close it. */
+// 	// /* TODO: get handle from sdi->conn and close it. */
 
-	// return SR_OK;
+// 	// return SR_OK;
 
-	/*----------above is the given code, below is from O L S----------*/
-	// not implemented
-}
+// 	/*----------above is the given code, below is from O L S----------*/
+// 	// not implemented
+// }
 
 static int config_get(uint32_t key, GVariant **data,
 	const struct sr_dev_inst *sdi, const struct sr_channel_group *cg)
 {
+	sr_dbg("Entering config get");
 	// int ret;
 
 	// (void)sdi;
@@ -286,13 +287,14 @@ static int config_get(uint32_t key, GVariant **data,
 	default:
 		return SR_ERR_NA;
 	}
-
+	sr_dbg("Exiting config get gracefully");
 	return SR_OK;
 }
 
 static int config_set(uint32_t key, GVariant *data,
 	const struct sr_dev_inst *sdi, const struct sr_channel_group *cg)
 {
+	sr_dbg("Entering config set");
 	// int ret;
 
 	// (void)sdi;
@@ -381,13 +383,14 @@ static int config_set(uint32_t key, GVariant *data,
 	default:
 		return SR_ERR_NA;
 	}
-
+	sr_dbg("Exiting config set gracefully");
 	return SR_OK;
 }
 
 static int config_list(uint32_t key, GVariant **data,
 	const struct sr_dev_inst *sdi, const struct sr_channel_group *cg)
 {
+	sr_dbg("Entering config list");
 	// int ret;
 
 	// (void)sdi;
@@ -447,7 +450,7 @@ static int config_list(uint32_t key, GVariant **data,
 	default:
 		return SR_ERR_NA;
 	}
-
+	sr_dbg("Exiting config list gracefully");
 	return SR_OK;
 }
 
@@ -455,6 +458,7 @@ static int config_list(uint32_t key, GVariant **data,
 /**** This whole function was not given, it is O L S only*******/
 static int set_trigger(const struct sr_dev_inst *sdi, int stage)
 {
+	sr_dbg("Entering set trigger");
 	struct dev_context *devc;
 	struct sr_serial_dev_inst *serial;
 	uint8_t cmd, arg[4];
@@ -486,12 +490,13 @@ static int set_trigger(const struct sr_dev_inst *sdi, int stage)
 		arg[3] |= TRIGGER_START;
 	if (acsp_send_longcommand(serial, cmd, arg) != SR_OK)
 		return SR_ERR;
-
+	sr_dbg("Exiting set trigger gracefully");
 	return SR_OK;
 }
 
 static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 {
+	sr_dbg("Entering acquisition start");
 	// /* TODO: configure hardware, reset acquisition state, set up
 	//  * callbacks and send header packet. */
 
@@ -617,12 +622,13 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	 */
 	serial_source_add(sdi->session, serial, G_IO_IN, 100,
 			acsp_receive_data, (struct sr_dev_inst *)sdi);
-
+	sr_dbg("Exiting dev acquisition gracefully");
 	return SR_OK;
 }
 
 static int dev_acquisition_stop(struct sr_dev_inst *sdi)
 {
+	sr_dbg("Entering dev acquisition stop");
 	// /* TODO: stop acquisition. */
 
 	// (void)sdi;
@@ -632,7 +638,7 @@ static int dev_acquisition_stop(struct sr_dev_inst *sdi)
 	/*----------above is the given code, below is from O L S----------*/
 
 	acsp_abort_acquisition(sdi);
-
+	sr_dbg("Exiting dev acquisition stop gracefully");
 	return SR_OK;
 }
 
