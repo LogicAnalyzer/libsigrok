@@ -300,17 +300,21 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 	sr_dbg("Now Entering acsp_set_samplerate\n");
 	struct dev_context *devc;
 
+	sr_dbg("Setting devc");
 	devc = sdi->priv;
 	if (devc->max_samplerate && samplerate > devc->max_samplerate)
+		sr_dbg("devc->max_samplerate && samplerate > devc->max_samplerate");
 		return SR_ERR_SAMPLERATE;
 
 	if (samplerate > CLOCK_RATE) {
+		sr_dbg("samplerate > CLOCK_RATE");
 		sr_info("Enabling demux mode.");
 		devc->flag_reg |= FLAG_DEMUX;
 		devc->flag_reg &= ~FLAG_FILTER;
 		devc->max_channels = NUM_CHANNELS / 2;
 		devc->cur_samplerate_divider = (CLOCK_RATE * 2 / samplerate) - 1;
 	} else {
+		sr_dbg("! samplerate > CLOCK_RATE");
 		sr_info("Disabling demux mode.");
 		devc->flag_reg &= ~FLAG_DEMUX;
 		devc->flag_reg |= FLAG_FILTER;
@@ -321,10 +325,13 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 	/* Calculate actual samplerate used and complain if it is different
 	 * from the requested.
 	 */
+	sr_dbg("Calculate samplerate");
 	devc->cur_samplerate = CLOCK_RATE / (devc->cur_samplerate_divider + 1);
 	if (devc->flag_reg & FLAG_DEMUX)
+		sr_dbg("devc->flag_reg & FLAG_DEMUX");
 		devc->cur_samplerate *= 2;
 	if (devc->cur_samplerate != samplerate)
+		sr_dbg("devc->cur_samplerate != samplerate");
 		sr_info("Can't match samplerate %" PRIu64 ", using %"
 		       PRIu64 ".", samplerate, devc->cur_samplerate);
 
