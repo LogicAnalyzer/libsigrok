@@ -119,11 +119,11 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 		src = l->data;
 		switch (src->key) {
 		case SR_CONF_CONN:
-			sr_dbg("entered SR_CONF_CONN")
+			sr_dbg("entered SR_CONF_CONN");
 			conn = g_variant_get_string(src->data, NULL);
 			break;
 		case SR_CONF_SERIALCOMM:
-			sr_dbg("entered SR_CONF_SERIALCONN")
+			sr_dbg("entered SR_CONF_SERIALCONN");
 			serialcomm = g_variant_get_string(src->data, NULL);
 			break;
 		}
