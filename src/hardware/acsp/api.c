@@ -119,9 +119,11 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 		src = l->data;
 		switch (src->key) {
 		case SR_CONF_CONN:
+			sr_dbg("entered SR_CONF_CONN")
 			conn = g_variant_get_string(src->data, NULL);
 			break;
 		case SR_CONF_SERIALCOMM:
+			sr_dbg("entered SR_CONF_SERIALCONN")
 			serialcomm = g_variant_get_string(src->data, NULL);
 			break;
 		}
@@ -639,22 +641,14 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 static int dev_acquisition_stop(struct sr_dev_inst *sdi)
 {
 	sr_dbg("Entering dev acquisition stop");
-	// /* TODO: stop acquisition. */
-
-	// (void)sdi;
-
-	// return SR_OK;
-
-	/*----------above is the given code, below is from O L S----------*/
-
 	acsp_abort_acquisition(sdi);
 	sr_dbg("Exiting dev acquisition stop gracefully");
 	return SR_OK;
 }
 
 SR_PRIV struct sr_dev_driver acsp_driver_info = {
-	.name = "acsp",
-	.longname = "acsp",
+	.name = "ACSP",
+	.longname = "Actually Challenging Senior Project",
 	.api_version = 1,
 	.init = std_init,
 	.cleanup = std_cleanup,
