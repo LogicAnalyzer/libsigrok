@@ -83,7 +83,7 @@ static const uint64_t samplerates[] = {
 	SR_HZ(1),
 };
 
-#define RESPONSE_DELAY_US (10 * 1000)
+#define RESPONSE_DELAY_US (1000 * 1000)
 
 static GSList *scan(struct sr_dev_driver *di, GSList *options)
 {
@@ -160,8 +160,8 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 	g_usleep(RESPONSE_DELAY_US);
 
 	if (sp_input_waiting(serial->data) == 0) {
-		sr_dbg("Didn't get any reply.");
-		return NULL;
+		sr_dbg("TEMP: Didn't get any reply.");
+		//return NULL;
 	}
 
 	ret = serial_read_blocking(serial, buf, 4, serial_timeout(serial, 4));
