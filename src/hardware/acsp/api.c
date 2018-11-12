@@ -20,7 +20,7 @@
 #include <config.h>
 #include "protocol.h"
 
-#define SERIALCOMM "115200/8n1"
+#define SERIALCOMM "9600/8n1"
 
 static const uint32_t scanopts[] = {
 	SR_CONF_CONN,
@@ -151,11 +151,10 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 		sr_err("Could not use port %s. Quitting.", conn);
 		return NULL;
 	}
-	acsp_send_shortcommand(serial, CMD_ID);
-	acsp_send_shortcommand(serial, CMD_ID);
-	acsp_send_shortcommand(serial, CMD_ID);
-	acsp_send_shortcommand(serial, CMD_ID);
-	acsp_send_shortcommand(serial, CMD_ID);
+	if (acsp_send_id_request(serial) != SR_OK){
+		serial_close(serial);
+		se_err("Request not recieved");
+	}
 	
 	g_usleep(RESPONSE_DELAY_US);
 

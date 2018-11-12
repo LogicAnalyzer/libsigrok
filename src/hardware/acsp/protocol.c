@@ -64,10 +64,18 @@ SR_PRIV int acsp_send_reset(struct sr_serial_dev_inst *serial)
 	sr_dbg("Now Entering acsp_send_reset\n");
 	unsigned int i;
 
-	for (i = 0; i < 5; i++) {
-		if (acsp_send_shortcommand(serial, CMD_RESET) != SR_OK)
-			return SR_ERR;
-	}
+	char buf[5];
+	buf[0] = CMD_RESET;
+	buf[1] = CMD_RESET;
+	buf[2] = CMD_RESET;
+	buf[3] = CMD_RESET;
+	buf[4] = CMD_RESET;
+
+	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 1)
+		return SR_ERR;
+
+	if (serial_drain(serial) != 0)
+		return SR_ERR;
 
 	return SR_OK;
 }
