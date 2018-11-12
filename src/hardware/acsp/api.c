@@ -147,13 +147,15 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 		return NULL;
 
 	if (acsp_send_reset(serial) != SR_OK) {
-		serial_close(serial);
-		sr_err("Could not use port %s. Quitting.", conn);
-		return NULL;
+		//serial_close(serial);
+		//sr_err("Could not use port %s. Quitting.", conn);
+		sr_dbg("Sigrok says reset failed");
+		//return NULL;
 	}
 	if (acsp_send_id_request(serial) != SR_OK){
-		serial_close(serial);
-		sr_err("Request not recieved");
+		//serial_close(serial);
+		//sr_err("Request not recieved");
+		sr_dbg("Sigrok says id request failed")
 	}
 	
 	g_usleep(RESPONSE_DELAY_US);

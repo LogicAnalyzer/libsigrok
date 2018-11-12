@@ -69,7 +69,7 @@ SR_PRIV int acsp_send_reset(struct sr_serial_dev_inst *serial)
 	buf[3] = CMD_RESET;
 	buf[4] = CMD_RESET;
 
-	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 1)
+	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 5)
 		return SR_ERR;
 
 	if (serial_drain(serial) != 0)
@@ -88,7 +88,7 @@ SR_PRIV int acsp_send_id_request(struct sr_serial_dev_inst *serial)
 	buf[3] = CMD_ID;
 	buf[4] = CMD_ID;
 
-	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 1)
+	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 5)
 		return SR_ERR;
 
 	if (serial_drain(serial) != 0)
