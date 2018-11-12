@@ -152,7 +152,11 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 		return NULL;
 	}
 	acsp_send_shortcommand(serial, CMD_ID);
-
+	acsp_send_shortcommand(serial, CMD_ID);
+	acsp_send_shortcommand(serial, CMD_ID);
+	acsp_send_shortcommand(serial, CMD_ID);
+	acsp_send_shortcommand(serial, CMD_ID);
+	
 	g_usleep(RESPONSE_DELAY_US);
 
 	if (sp_input_waiting(serial->data) == 0) {
@@ -166,8 +170,8 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 		return NULL;
 	}
 
-	if (strncmp(buf, "1SLO", 4) && strncmp(buf, "1ALS", 4)) {
-		sr_err("Invalid reply (expected '1SLO' or '1ALS', got "
+	if (strncmp(buf, "ACSP", 4) && strncmp(buf, "ACSP", 4)) {
+		sr_err("Invalid reply (expected 'ACSP' or 'ACSP', got "
 		       "'%c%c%c%c').", buf[0], buf[1], buf[2], buf[3]);
 		return NULL;
 	}
