@@ -153,7 +153,7 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 	}
 	if (acsp_send_id_request(serial) != SR_OK){
 		serial_close(serial);
-		se_err("Request not recieved");
+		sr_err("Request not recieved");
 	}
 	
 	g_usleep(RESPONSE_DELAY_US);
