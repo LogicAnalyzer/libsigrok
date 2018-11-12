@@ -155,7 +155,7 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 	if (acsp_send_id_request(serial) != SR_OK){
 		//serial_close(serial);
 		//sr_err("Request not recieved");
-		sr_dbg("Sigrok says id request failed")
+		sr_dbg("Sigrok says id request failed");
 	}
 	
 	g_usleep(RESPONSE_DELAY_US);
