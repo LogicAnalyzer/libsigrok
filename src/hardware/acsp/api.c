@@ -20,7 +20,7 @@
 #include <config.h>
 #include "protocol.h"
 
-#define SERIALCOMM "115200/8n1"
+#define SERIALCOMM "9600/8n1"
 
 static const uint32_t scanopts[] = {
 	SR_CONF_CONN,
@@ -83,7 +83,7 @@ static const uint64_t samplerates[] = {
 	SR_HZ(1),
 };
 
-#define RESPONSE_DELAY_US (10 * 1000)
+#define RESPONSE_DELAY_US (1000 * 1000)
 
 static GSList *scan(struct sr_dev_driver *di, GSList *options)
 {
@@ -119,9 +119,11 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 		src = l->data;
 		switch (src->key) {
 		case SR_CONF_CONN:
+			sr_dbg("entered SR_CONF_CONN");
 			conn = g_variant_get_string(src->data, NULL);
 			break;
 		case SR_CONF_SERIALCOMM:
+			sr_dbg("entered SR_CONF_SERIALCONN");
 			serialcomm = g_variant_get_string(src->data, NULL);
 			break;
 		}
@@ -147,17 +149,22 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 		return NULL;
 
 	if (acsp_send_reset(serial) != SR_OK) {
-		serial_close(serial);
-		sr_err("Could not use port %s. Quitting.", conn);
-		return NULL;
+		//serial_close(serial);
+		//sr_err("Could not use port %s. Quitting.", conn);
+		sr_dbg("Sigrok says reset failed");
+		//return NULL;
 	}
-	acsp_send_shortcommand(serial, CMD_ID);
-
+	if (acsp_send_id_request(serial) != SR_OK){
+		//serial_close(serial);
+		//sr_err("Request not recieved");
+		sr_dbg("Sigrok says id request failed");
+	}
+	
 	g_usleep(RESPONSE_DELAY_US);
 
 	if (sp_input_waiting(serial->data) == 0) {
-		sr_dbg("Didn't get any reply.");
-		return NULL;
+		sr_dbg("TEMP: Didn't get any reply.");
+		//return NULL;
 	}
 
 	ret = serial_read_blocking(serial, buf, 4, serial_timeout(serial, 4));
@@ -166,8 +173,8 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 		return NULL;
 	}
 
-	if (strncmp(buf, "1SLO", 4) && strncmp(buf, "1ALS", 4)) {
-		sr_err("Invalid reply (expected '1SLO' or '1ALS', got "
+	if (strncmp(buf, "ACSP", 4) && strncmp(buf, "ACSP", 4)) {
+		sr_err("Invalid reply (expected 'ACSP' or 'ACSP', got "
 		       "'%c%c%c%c').", buf[0], buf[1], buf[2], buf[3]);
 		return NULL;
 	}
@@ -641,22 +648,14 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 static int dev_acquisition_stop(struct sr_dev_inst *sdi)
 {
 	sr_dbg("Entering dev acquisition stop");
-	// /* TODO: stop acquisition. */
-
-	// (void)sdi;
-
-	// return SR_OK;
-
-	/*----------above is the given code, below is from O L S----------*/
-
 	acsp_abort_acquisition(sdi);
 	sr_dbg("Exiting dev acquisition stop gracefully");
 	return SR_OK;
 }
 
 SR_PRIV struct sr_dev_driver acsp_driver_info = {
-	.name = "acsp",
-	.longname = "acsp",
+	.name = "ACSP",
+	.longname = "Actually Challenging Senior Project",
 	.api_version = 1,
 	.init = std_init,
 	.cleanup = std_cleanup,

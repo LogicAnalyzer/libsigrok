@@ -30,7 +30,7 @@
 
 #define NUM_CHANNELS               32
 #define NUM_TRIGGER_STAGES         4
-#define SERIAL_SPEED               B115200
+#define SERIAL_SPEED               B9600
 #define CLOCK_RATE                 SR_MHZ(100)
 #define MIN_NUM_SAMPLES            4
 #define DEFAULT_SAMPLERATE         SR_KHZ(200)
@@ -104,6 +104,7 @@ SR_PRIV int acsp_send_shortcommand(struct sr_serial_dev_inst *serial,
 SR_PRIV int acsp_send_longcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command, uint8_t *data);
 SR_PRIV int acsp_send_reset(struct sr_serial_dev_inst *serial);
+SR_PRIV int acsp_send_id_request(struct sr_serial_dev_inst *serial);
 SR_PRIV void acsp_channel_mask(const struct sr_dev_inst *sdi);
 SR_PRIV int acsp_convert_trigger(const struct sr_dev_inst *sdi);
 SR_PRIV struct dev_context *acsp_dev_new(void);
