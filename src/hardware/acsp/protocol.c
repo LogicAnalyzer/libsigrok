@@ -97,6 +97,25 @@ SR_PRIV int acsp_send_id_request(struct sr_serial_dev_inst *serial)
 	return SR_OK;	
 }
 
+SR_PRIV int acsp_send_metadata_request(struct sr_serial_dev_inst *serial)
+{
+	sr_dbg("Now Entering acsp_send_metadata_request\n");
+	char buf[5];
+	buf[0] = CMD_METADATA;
+	buf[1] = CMD_METADATA;
+	buf[2] = CMD_METADATA;
+	buf[3] = CMD_METADATA;
+	buf[4] = CMD_METADATA;
+
+	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 5)
+		return SR_ERR;
+
+	if (serial_drain(serial) != 0)
+		return SR_ERR;
+
+	return SR_OK;	
+}
+
 /* Configures the channel mask based on which channels are enabled. */
 SR_PRIV void acsp_channel_mask(const struct sr_dev_inst *sdi)
 {

@@ -83,7 +83,7 @@ static const uint64_t samplerates[] = {
 	SR_HZ(1),
 };
 
-#define RESPONSE_DELAY_US (1000 * 1000)
+#define RESPONSE_DELAY_US (1000 * 10)
 
 static GSList *scan(struct sr_dev_driver *di, GSList *options)
 {
@@ -149,22 +149,19 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 		return NULL;
 
 	if (acsp_send_reset(serial) != SR_OK) {
-		//serial_close(serial);
-		//sr_err("Could not use port %s. Quitting.", conn);
-		sr_dbg("Sigrok says reset failed");
-		//return NULL;
+		serial_close(serial);
+		sr_err("Could not use port %s. Quitting.", conn);
+		return NULL;
 	}
 	if (acsp_send_id_request(serial) != SR_OK){
-		//serial_close(serial);
-		//sr_err("Request not recieved");
-		sr_dbg("Sigrok says id request failed");
+		serial_close(serial);
+		sr_err("Request not recieved");
 	}
 	
 	g_usleep(RESPONSE_DELAY_US);
 
 	if (sp_input_waiting(serial->data) == 0) {
 		sr_dbg("TEMP: Didn't get any reply.");
-		//return NULL;
 	}
 
 	ret = serial_read_blocking(serial, buf, 4, serial_timeout(serial, 4));
@@ -173,6 +170,7 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 		return NULL;
 	}
 
+    sr_dbg("Returned value: = %c%c%c%c", buf[0], buf[1], buf[2], buf[3]);
 	if (strncmp(buf, "ACSP", 4) && strncmp(buf, "ACSP", 4)) {
 		sr_err("Invalid reply (expected 'ACSP' or 'ACSP', got "
 		       "'%c%c%c%c').", buf[0], buf[1], buf[2], buf[3]);
@@ -182,7 +180,9 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 	/* Definitely using the acsp protocol, check if it supports
 	 * the metadata command.
 	 */
-	acsp_send_shortcommand(serial, CMD_METADATA);
+    if (acsp_send_metadata_request(serial) != SR_OK){
+    	sr_dbg("The metadata command didn't send");
+    }
 
 	g_usleep(RESPONSE_DELAY_US);
 
