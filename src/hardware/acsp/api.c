@@ -132,7 +132,7 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 	if (!serialcomm)
 		serialcomm = SERIALCOMM;
 
-	sr_info("Serial communication: %s", serialcomm);
+	sr_dbg("Serial communication: %s", serialcomm);
 
 	serial = sr_serial_dev_inst_new(conn, serialcomm);
 
