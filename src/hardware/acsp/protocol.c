@@ -272,7 +272,9 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			g_string_free(tmp_str, TRUE);
 			break;
 		case 1:
+			sr_dbg("Entering case 1");
 			/* 32-bit unsigned integer */
+			
 			delay_ms = serial_timeout(serial, 4);
 			if (serial_read_blocking(serial, &tmp_int, 4, delay_ms) != 4)
 				break;
@@ -310,9 +312,10 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			break;
 		case 2:
 			/* 8-bit unsigned integer */
+			sr_dbg("Entering case 2");
 			delay_ms = serial_timeout(serial, 2);
-			//if (serial_read_blocking(serial, &tmp_c, 1, delay_ms) != 1)
-			//	break;
+			if (serial_read_blocking(serial, &tmp_c, 1, delay_ms) != 1)
+				break;
 			sr_dbg("Got metadata key 0x%.2x value 0x%.2x. token 0x%.2x",
 			       key, tmp_c);
 			switch (token) {
@@ -336,6 +339,7 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			break;
 		default:
 			/* unknown type */
+			sr_dbg("Got unknown type");
 			break;
 		}
 	}
