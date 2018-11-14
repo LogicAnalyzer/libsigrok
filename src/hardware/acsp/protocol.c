@@ -224,7 +224,7 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 		sr_dbg("Looking at byte: %.2x", key);
 		if (key == 0x00) {
 			sr_dbg("Got metadata key 0x00, metadata ends.");
-			break;
+			continue; // try to grab next byte instead of ending
 		}
 		type = key >> 5;
 		token = key & 0x1f;
@@ -236,6 +236,7 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			delay_ms = serial_timeout(serial, 2);
 			while (serial_read_blocking(serial, &tmp_c, 1, delay_ms) == 1 && tmp_c != '\0')
 				g_string_append_c(tmp_str, tmp_c);
+			
 			sr_dbg("Got metadata key 0x%.2x value '%s'.",
 			       key, tmp_str->str);
 			switch (token) {
