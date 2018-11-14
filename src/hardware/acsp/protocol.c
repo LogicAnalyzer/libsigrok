@@ -278,7 +278,7 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			delay_ms = serial_timeout(serial, 6);
 			if (serial_read_blocking(serial, &tmp_int, 4, delay_ms) != 4)
 			{
-				sr_dbg("didn't get 4 bytes from serial");
+				sr_dbg("!!! didn't get 4 bytes from serial");
 				//break;
 			}	
 			tmp_int = RB32(&tmp_int);
@@ -316,9 +316,12 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 		case 2:
 			/* 8-bit unsigned integer */
 			sr_dbg("Entering case 2");
-			delay_ms = serial_timeout(serial, 2);
+			delay_ms = serial_timeout(serial, 3);
 			if (serial_read_blocking(serial, &tmp_c, 1, delay_ms) != 1)
-				break;
+			{
+				sr_dbg("!!! didn't get a byte from serial");
+				//break;
+			}
 			sr_dbg("Got metadata key 0x%.2x value 0x%.2x. token 0x%.2x",
 			       key, tmp_c);
 			switch (token) {
