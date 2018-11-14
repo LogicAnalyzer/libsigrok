@@ -318,14 +318,14 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			switch (token) {
 			case 0x00:
 				/* Number of usable channels */
-				sr_dbg("Number of usable channels found")
+				sr_dbg("Number of usable channels found");
 				for (ui = 0; ui < tmp_c; ui++)
 					sr_channel_new(sdi, ui, SR_CHANNEL_LOGIC, TRUE,
 							acsp_channel_names[ui]);
 				break;
 			case 0x01:
 				/* protocol version */
-				sr_dbg("Protocol version found")
+				sr_dbg("Protocol version found");
 				devc->protocol_version = tmp_c;
 				break;
 			default:
