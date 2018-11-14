@@ -310,20 +310,22 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			break;
 		case 2:
 			/* 8-bit unsigned integer */
-			delay_ms = serial_timeout(serial, 1);
-			if (serial_read_blocking(serial, &tmp_c, 1, delay_ms) != 1)
-				break;
+			delay_ms = serial_timeout(serial, 2);
+			//if (serial_read_blocking(serial, &tmp_c, 1, delay_ms) != 1)
+			//	break;
 			sr_dbg("Got metadata key 0x%.2x value 0x%.2x. token 0x%.2x",
 			       key, tmp_c);
 			switch (token) {
 			case 0x00:
 				/* Number of usable channels */
+				sr_dbg("Number of usable channels found")
 				for (ui = 0; ui < tmp_c; ui++)
 					sr_channel_new(sdi, ui, SR_CHANNEL_LOGIC, TRUE,
 							acsp_channel_names[ui]);
 				break;
 			case 0x01:
 				/* protocol version */
+				sr_dbg("Protocol version found")
 				devc->protocol_version = tmp_c;
 				break;
 			default:
