@@ -278,7 +278,7 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			delay_ms = serial_timeout(serial, 6);
 			if (serial_read_blocking(serial, &tmp_int, 4, delay_ms) != 4)
 			{
-				sr_dbg("didn't get 4 bytes from serial")
+				sr_dbg("didn't get 4 bytes from serial");
 				//break;
 			}	
 			tmp_int = RB32(&tmp_int);
