@@ -158,7 +158,7 @@ static GSList *scan(struct sr_dev_driver *di, GSList *options)
 		sr_err("Request not recieved");
 	}
 	
-	g_usleep(RESPONSE_DELAY_US);
+	g_usleep(RESPONSE_DELAY_US * 2);
 
 	if (sp_input_waiting(serial->data) == 0) {
 		sr_dbg("TEMP: Didn't get any reply.");
