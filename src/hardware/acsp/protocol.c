@@ -233,9 +233,12 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 		case 0:
 			/* NULL-terminated string */
 			tmp_str = g_string_new("");
-			delay_ms = serial_timeout(serial, 2);
-			while (serial_read_blocking(serial, &tmp_c, 1, delay_ms) == 1 && tmp_c != '\0')
+			delay_ms = serial_timeout(serial, 4);
+			while (serial_read_blocking(serial, &tmp_c, 1, delay_ms * 2) == 1 && tmp_c != '\0')
+			{
+				sr_dbg("Adding %c to string", tmp_c);
 				g_string_append_c(tmp_str, tmp_c);
+			}
 			
 			sr_dbg("Got metadata key 0x%.2x value '%s'.",
 			       key, tmp_str->str);
@@ -243,6 +246,7 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			case 0x01:
 				/* Device name */
 				devname = g_string_append(devname, tmp_str->str);
+				sr_dbg("Done reading device name");
 				break;
 			case 0x02:
 				/* FPGA firmware version */
@@ -250,6 +254,7 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 					g_string_append(version, ", ");
 				g_string_append(version, "FPGA version ");
 				g_string_append(version, tmp_str->str);
+				sr_dbg("Done reading FPGA version");
 				break;
 			case 0x03:
 				/* Ancillary version */
@@ -257,6 +262,7 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 					g_string_append(version, ", ");
 				g_string_append(version, "Ancillary version ");
 				g_string_append(version, tmp_str->str);
+				sr_dbg("Done reading ancillary version");
 				break;
 			default:
 				sr_info("acsp: unknown token 0x%.2x: '%s'",
