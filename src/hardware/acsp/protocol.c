@@ -97,6 +97,25 @@ SR_PRIV int acsp_send_id_request(struct sr_serial_dev_inst *serial)
 	return SR_OK;	
 }
 
+SR_PRIV int acsp_send_metadata_request(struct sr_serial_dev_inst *serial)
+{
+	sr_dbg("Now Entering acsp_send_metadata_request\n");
+	char buf[5];
+	buf[0] = CMD_METADATA;
+	buf[1] = CMD_METADATA;
+	buf[2] = CMD_METADATA;
+	buf[3] = CMD_METADATA;
+	buf[4] = CMD_METADATA;
+
+	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 5)
+		return SR_ERR;
+
+	if (serial_drain(serial) != 0)
+		return SR_ERR;
+
+	return SR_OK;	
+}
+
 /* Configures the channel mask based on which channels are enabled. */
 SR_PRIV void acsp_channel_mask(const struct sr_dev_inst *sdi)
 {
@@ -199,12 +218,13 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 
 	key = 0xff;
 	while (key) {
-		delay_ms = serial_timeout(serial, 1);
+		delay_ms = serial_timeout(serial, 2);
 		if (serial_read_blocking(serial, &key, 1, delay_ms) != 1)
 			break;
+		sr_dbg("Looking at byte: %.2x", key);
 		if (key == 0x00) {
 			sr_dbg("Got metadata key 0x00, metadata ends.");
-			break;
+			break; // try to grab next byte instead of ending
 		}
 		type = key >> 5;
 		token = key & 0x1f;
@@ -213,15 +233,20 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 		case 0:
 			/* NULL-terminated string */
 			tmp_str = g_string_new("");
-			delay_ms = serial_timeout(serial, 1);
-			while (serial_read_blocking(serial, &tmp_c, 1, delay_ms) == 1 && tmp_c != '\0')
+			delay_ms = serial_timeout(serial, 4);
+			while (serial_read_blocking(serial, &tmp_c, 1, delay_ms * 2) == 1 && tmp_c != '\0')
+			{
+				sr_dbg("Adding %c to string", tmp_c);
 				g_string_append_c(tmp_str, tmp_c);
+			}
+			
 			sr_dbg("Got metadata key 0x%.2x value '%s'.",
 			       key, tmp_str->str);
 			switch (token) {
 			case 0x01:
 				/* Device name */
 				devname = g_string_append(devname, tmp_str->str);
+				sr_dbg("Done reading device name");
 				break;
 			case 0x02:
 				/* FPGA firmware version */
@@ -229,6 +254,7 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 					g_string_append(version, ", ");
 				g_string_append(version, "FPGA version ");
 				g_string_append(version, tmp_str->str);
+				sr_dbg("Done reading FPGA version");
 				break;
 			case 0x03:
 				/* Ancillary version */
@@ -236,6 +262,7 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 					g_string_append(version, ", ");
 				g_string_append(version, "Ancillary version ");
 				g_string_append(version, tmp_str->str);
+				sr_dbg("Done reading ancillary version");
 				break;
 			default:
 				sr_info("acsp: unknown token 0x%.2x: '%s'",
@@ -245,10 +272,15 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			g_string_free(tmp_str, TRUE);
 			break;
 		case 1:
+			sr_dbg("Entering case 1");
 			/* 32-bit unsigned integer */
-			delay_ms = serial_timeout(serial, 4);
+			
+			delay_ms = serial_timeout(serial, 6);
 			if (serial_read_blocking(serial, &tmp_int, 4, delay_ms) != 4)
-				break;
+			{
+				sr_dbg("!!! didn't get 4 bytes from serial");
+				//break;
+			}	
 			tmp_int = RB32(&tmp_int);
 			sr_dbg("Got metadata key 0x%.2x value 0x%.8x.",
 			       key, tmp_int);
@@ -283,20 +315,26 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			break;
 		case 2:
 			/* 8-bit unsigned integer */
+			sr_dbg("Entering case 2");
 			delay_ms = serial_timeout(serial, 1);
-			if (serial_read_blocking(serial, &tmp_c, 1, delay_ms) != 1)
-				break;
+			if (serial_read_blocking(serial, &tmp_c, 1, delay_ms * 2) != 1)
+			{
+				sr_dbg("!!! didn't get a byte from serial");
+				//break;
+			}
 			sr_dbg("Got metadata key 0x%.2x value 0x%.2x. token 0x%.2x",
 			       key, tmp_c);
 			switch (token) {
 			case 0x00:
 				/* Number of usable channels */
+				sr_dbg("Number of usable channels found");
 				for (ui = 0; ui < tmp_c; ui++)
 					sr_channel_new(sdi, ui, SR_CHANNEL_LOGIC, TRUE,
 							acsp_channel_names[ui]);
 				break;
 			case 0x01:
 				/* protocol version */
+				sr_dbg("Protocol version found");
 				devc->protocol_version = tmp_c;
 				break;
 			default:
@@ -307,6 +345,7 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			break;
 		default:
 			/* unknown type */
+			sr_dbg("Got unknown type");
 			break;
 		}
 	}
