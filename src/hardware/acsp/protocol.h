@@ -28,12 +28,12 @@
 
 #define LOG_PREFIX "acsp"
 
-#define NUM_CHANNELS               32
-#define NUM_TRIGGER_STAGES         4
+#define NUM_CHANNELS               8
+#define NUM_TRIGGER_STAGES         1
 #define SERIAL_SPEED               B115200
 #define CLOCK_RATE                 SR_MHZ(100)
 #define MIN_NUM_SAMPLES            4
-#define DEFAULT_SAMPLERATE         SR_KHZ(200)
+#define DEFAULT_SAMPLERATE         SR_KHZ(100)
 
 /* Command opcodes */
 #define CMD_RESET                  0x00

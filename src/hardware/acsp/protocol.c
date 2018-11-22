@@ -24,11 +24,14 @@ SR_PRIV int acsp_send_shortcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command)
 {
 	sr_dbg("Now Entering acsp_send_shortcommand\n");
-	char buf[1];
+	char buf[5];
 
 	sr_dbg("Sending cmd 0x%.2x.", command);
-	buf[0] = command;
-	if (serial_write_blocking(serial, buf, 1, serial_timeout(serial, 1)) != 1)
+	for(int i=0; i<5; ++i){//send command 5 times for ACSP
+		buf[i] = command;
+	}
+
+	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 5)
 		return SR_ERR;
 
 	if (serial_drain(serial) != 0)
@@ -62,58 +65,22 @@ SR_PRIV int acsp_send_longcommand(struct sr_serial_dev_inst *serial,
 SR_PRIV int acsp_send_reset(struct sr_serial_dev_inst *serial)
 {
 	sr_dbg("Now Entering acsp_send_reset\n");
-	char buf[5];
-	buf[0] = CMD_RESET;
-	buf[1] = CMD_RESET;
-	buf[2] = CMD_RESET;
-	buf[3] = CMD_RESET;
-	buf[4] = CMD_RESET;
 
-	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 5)
-		return SR_ERR;
-
-	if (serial_drain(serial) != 0)
-		return SR_ERR;
-
-	return SR_OK;
+	return acsp_send_shortcommand(serial, CMD_RESET);
 }
 
 SR_PRIV int acsp_send_id_request(struct sr_serial_dev_inst *serial)
 {
 	sr_dbg("Now Entering acsp_id_request\n");
-	char buf[5];
-	buf[0] = CMD_ID;
-	buf[1] = CMD_ID;
-	buf[2] = CMD_ID;
-	buf[3] = CMD_ID;
-	buf[4] = CMD_ID;
 
-	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 5)
-		return SR_ERR;
-
-	if (serial_drain(serial) != 0)
-		return SR_ERR;
-
-	return SR_OK;	
+	return acsp_send_shortcommand(serial, CMD_ID);	
 }
 
 SR_PRIV int acsp_send_metadata_request(struct sr_serial_dev_inst *serial)
 {
 	sr_dbg("Now Entering acsp_send_metadata_request\n");
-	char buf[5];
-	buf[0] = CMD_METADATA;
-	buf[1] = CMD_METADATA;
-	buf[2] = CMD_METADATA;
-	buf[3] = CMD_METADATA;
-	buf[4] = CMD_METADATA;
 
-	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 5)
-		return SR_ERR;
-
-	if (serial_drain(serial) != 0)
-		return SR_ERR;
-
-	return SR_OK;	
+	return acsp_send_shortcommand(serial, CMD_METADATA);	
 }
 
 /* Configures the channel mask based on which channels are enabled. */
@@ -366,9 +333,10 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 
 	sr_dbg("Setting devc");
 	devc = sdi->priv;
-	if (devc->max_samplerate && samplerate > devc->max_samplerate)
+	if (devc->max_samplerate && samplerate > devc->max_samplerate){
 		sr_dbg("devc->max_samplerate && samplerate > devc->max_samplerate");
 		return SR_ERR_SAMPLERATE;
+	}
 
 	if (samplerate > CLOCK_RATE) {
 		sr_dbg("samplerate > CLOCK_RATE");

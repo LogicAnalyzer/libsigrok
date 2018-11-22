@@ -43,8 +43,8 @@ static const uint32_t devopts[] = {
 };
 
 static const int32_t trigger_matches[] = {
-	SR_TRIGGER_ZERO,
-	SR_TRIGGER_ONE,
+	SR_TRIGGER_RISING,
+	SR_TRIGGER_FALLING,
 };
 
 #define STR_PATTERN_NONE     "None"
