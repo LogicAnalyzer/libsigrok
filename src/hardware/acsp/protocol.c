@@ -333,9 +333,10 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 
 	sr_dbg("Setting devc");
 	devc = sdi->priv;
-	if (devc->max_samplerate && samplerate > devc->max_samplerate)
+	if (devc->max_samplerate && samplerate > devc->max_samplerate){
 		sr_dbg("devc->max_samplerate && samplerate > devc->max_samplerate");
 		return SR_ERR_SAMPLERATE;
+	}
 
 	if (samplerate > CLOCK_RATE) {
 		sr_dbg("samplerate > CLOCK_RATE");
