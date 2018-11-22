@@ -352,6 +352,8 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 		devc->flag_reg |= FLAG_FILTER;
 		devc->max_channels = NUM_CHANNELS;
 		devc->cur_samplerate_divider = (CLOCK_RATE / samplerate) - 1;
+		sr_info("Calculated samplerate divider ( %" PRIu64 "/ %"
+		       PRIu64 ")-1 = %" PRIu64 " .", CLOCK_RATE, samplerate, devc->cur_samplerate_divider);
 	}
 
 	/* Calculate actual samplerate used and complain if it is different
