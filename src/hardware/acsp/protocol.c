@@ -113,6 +113,7 @@ SR_PRIV int acsp_convert_trigger(const struct sr_dev_inst *sdi)
 
 	devc = sdi->priv;
 
+	// If NUM_TRIGGER_STAGES is 1, then this will run twice
 	devc->num_stages = 0;
 	for (i = 0; i < NUM_TRIGGER_STAGES; i++) {
 		devc->trigger_mask[i] = 0;
@@ -355,6 +356,7 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 		sr_info("Enabling demux mode.");
 		devc->flag_reg |= FLAG_DEMUX;
 		devc->flag_reg &= ~FLAG_FILTER;
+		devc->flag_reg = 0x00000000;
 		devc->max_channels = NUM_CHANNELS / 2;
 		devc->cur_samplerate_divider = (CLOCK_RATE * 2 / samplerate) - 1;
 	} else {
@@ -362,6 +364,7 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 		sr_info("Disabling demux mode.");
 		devc->flag_reg &= ~FLAG_DEMUX;
 		devc->flag_reg |= FLAG_FILTER;
+		devc->flag_reg = 0x00000000;
 		devc->max_channels = NUM_CHANNELS;
 		devc->cur_samplerate_divider = (CLOCK_RATE / samplerate) - 1;
 		sr_info("Calculated samplerate divider ( %" PRIu64 "/ %"
@@ -402,7 +405,7 @@ SR_PRIV void acsp_abort_acquisition(const struct sr_dev_inst *sdi)
 
 SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 {
-	sr_dbg("Now Entering acsp_receive_data\n");
+	// sr_dbg("Now Entering acsp_receive_data\n");
 	// const struct sr_dev_inst *sdi;
 	// struct dev_context *devc;
 
@@ -480,7 +483,7 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			 */
 			sample = devc->sample[0] | (devc->sample[1] << 8) \
 					| (devc->sample[2] << 16) | (devc->sample[3] << 24);
-			sr_dbg("Received sample 0x%.*x.", devc->num_bytes * 2, sample);
+			//sr_dbg("Received sample 0x%.*x.", devc->num_bytes * 2, sample);
 			if (devc->flag_reg & FLAG_RLE) {
 				/*
 				 * In RLE mode the high bit of the sample is the
@@ -537,7 +540,9 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			 * the acsp sends its sample buffer backwards.
 			 * store it in reverse order here, so we can dump
 			 * this on the session bus later.
+			 * TODO: Remove this feature. SUMP only
 			 */
+			
 			offset = (devc->limit_samples - devc->num_samples) * 4;
 			for (i = 0; i <= devc->rle_count; i++) {
 				memcpy(devc->raw_sample_buf + offset + (i * 4),
