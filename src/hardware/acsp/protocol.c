@@ -353,6 +353,7 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 		sr_info("Enabling demux mode.");
 		devc->flag_reg |= FLAG_DEMUX;
 		devc->flag_reg &= ~FLAG_FILTER;
+		devc->flag_reg = 0x00000000;
 		devc->max_channels = NUM_CHANNELS / 2;
 		devc->cur_samplerate_divider = (CLOCK_RATE * 2 / samplerate) - 1;
 	} else {
@@ -360,6 +361,7 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 		sr_info("Disabling demux mode.");
 		devc->flag_reg &= ~FLAG_DEMUX;
 		devc->flag_reg |= FLAG_FILTER;
+		devc->flag_reg = 0x00000000;
 		devc->max_channels = NUM_CHANNELS;
 		devc->cur_samplerate_divider = (CLOCK_RATE / samplerate) - 1;
 		sr_info("Calculated samplerate divider ( %" PRIu64 "/ %"
@@ -536,14 +538,14 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			 * store it in reverse order here, so we can dump
 			 * this on the session bus later.
 			 */
-			offset = (devc->limit_samples - devc->num_samples) * 4;
-			for (i = 0; i <= devc->rle_count; i++) {
-				memcpy(devc->raw_sample_buf + offset + (i * 4),
-				       devc->sample, 4);
-			}
-			memset(devc->sample, 0, 4);
-			devc->num_bytes = 0;
-			devc->rle_count = 0;
+			// offset = (devc->limit_samples - devc->num_samples) * 4;
+			// for (i = 0; i <= devc->rle_count; i++) {
+			// 	memcpy(devc->raw_sample_buf + offset + (i * 4),
+			// 	       devc->sample, 4);
+			// }
+			// memset(devc->sample, 0, 4);
+			// devc->num_bytes = 0;
+			// devc->rle_count = 0;
 		}
 	} else {
 		/*

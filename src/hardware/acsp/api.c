@@ -588,22 +588,22 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 		return SR_ERR;
 
 	/* Flag register. */
-	sr_dbg("Setting intpat %s, extpat %s, RLE %s, noise_filter %s, demux %s",
-			devc->flag_reg & FLAG_INTERNAL_TEST_MODE ? "on": "off",
-			devc->flag_reg & FLAG_EXTERNAL_TEST_MODE ? "on": "off",
-			devc->flag_reg & FLAG_RLE ? "on" : "off",
-			devc->flag_reg & FLAG_FILTER ? "on": "off",
-			devc->flag_reg & FLAG_DEMUX ? "on" : "off");
-	/*
-	 * Enable/disable acsp channel groups in the flag register according
-	 * to the channel mask. 1 means "disable channel".
-	 */
-	devc->flag_reg |= ~(acsp_changrp_mask << 2) & 0x3c;
-	arg[0] = devc->flag_reg & 0xff;
-	arg[1] = devc->flag_reg >> 8;
-	arg[2] = arg[3] = 0x00;
-	if (acsp_send_longcommand(serial, CMD_SET_FLAGS, arg) != SR_OK)
-		return SR_ERR;
+	// sr_dbg("Setting intpat %s, extpat %s, RLE %s, noise_filter %s, demux %s",
+	// 		devc->flag_reg & FLAG_INTERNAL_TEST_MODE ? "on": "off",
+	// 		devc->flag_reg & FLAG_EXTERNAL_TEST_MODE ? "on": "off",
+	// 		devc->flag_reg & FLAG_RLE ? "on" : "off",
+	// 		devc->flag_reg & FLAG_FILTER ? "on": "off",
+	// 		devc->flag_reg & FLAG_DEMUX ? "on" : "off");
+	// /*
+	//  * Enable/disable acsp channel groups in the flag register according
+	//  * to the channel mask. 1 means "disable channel".
+	//  */
+	// devc->flag_reg |= ~(acsp_changrp_mask << 2) & 0x3c;
+	// arg[0] = devc->flag_reg & 0xff;
+	// arg[1] = devc->flag_reg >> 8;
+	// arg[2] = arg[3] = 0x00;
+	//if (acsp_send_longcommand(serial, CMD_SET_FLAGS, arg) != SR_OK)
+	//	return SR_ERR;
 
 	/* Start acquisition on the device. */
 	if (acsp_send_shortcommand(serial, CMD_RUN) != SR_OK)
