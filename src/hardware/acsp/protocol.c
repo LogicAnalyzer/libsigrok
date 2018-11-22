@@ -400,7 +400,7 @@ SR_PRIV void acsp_abort_acquisition(const struct sr_dev_inst *sdi)
 
 SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 {
-	sr_dbg("Now Entering acsp_receive_data\n");
+	// sr_dbg("Now Entering acsp_receive_data\n");
 	// const struct sr_dev_inst *sdi;
 	// struct dev_context *devc;
 
@@ -478,7 +478,7 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			 */
 			sample = devc->sample[0] | (devc->sample[1] << 8) \
 					| (devc->sample[2] << 16) | (devc->sample[3] << 24);
-			sr_dbg("Received sample 0x%.*x.", devc->num_bytes * 2, sample);
+			//sr_dbg("Received sample 0x%.*x.", devc->num_bytes * 2, sample);
 			if (devc->flag_reg & FLAG_RLE) {
 				/*
 				 * In RLE mode the high bit of the sample is the
