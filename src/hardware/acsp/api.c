@@ -548,7 +548,6 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 		 * According to http://mygizmos.org/acsp/Logic-Sniffer-FPGA-Spec.pdf
 		 * reset command must be send prior each arm command
 		 */
-		sr_dbg("!!!!! SHOULD NEVER GET HERE !!!!!");
 		sr_dbg("Send reset command before trigger configure");
 		if (acsp_send_reset(serial) != SR_OK)
 			return SR_ERR;
