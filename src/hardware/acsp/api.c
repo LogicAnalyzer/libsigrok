@@ -39,7 +39,6 @@ static const uint32_t devopts[] = {
 	SR_CONF_EXTERNAL_CLOCK | SR_CONF_SET,
 	SR_CONF_PATTERN_MODE | SR_CONF_GET | SR_CONF_SET | SR_CONF_LIST,
 	SR_CONF_SWAP | SR_CONF_SET,
-	SR_CONF_RLE | SR_CONF_GET | SR_CONF_SET,
 };
 
 static const int32_t trigger_matches[] = {
