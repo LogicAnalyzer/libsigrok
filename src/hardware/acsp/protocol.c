@@ -363,12 +363,16 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 	sr_dbg("Calculate samplerate (%" PRIu64 " /( %" PRIu64 " + 1)= %" PRIu64 "",
 	 CLOCK_RATE, devc->cur_samplerate_divider, devc->cur_samplerate); 
 	if (devc->flag_reg & FLAG_DEMUX)
+	{
 		sr_dbg("devc->flag_reg & FLAG_DEMUX");
 		devc->cur_samplerate *= 2;
+	}
 	if (devc->cur_samplerate != samplerate)
+	{
 		sr_dbg("devc->cur_samplerate != samplerate");
 		sr_info("Can't match samplerate %" PRIu64 ", using %"
 		       PRIu64 ".", samplerate, devc->cur_samplerate);
+	}
 
 	return SR_OK;
 }
