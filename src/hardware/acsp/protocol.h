@@ -81,6 +81,8 @@ struct dev_context {
 	uint32_t channel_mask;
 	uint32_t trigger_mask[NUM_TRIGGER_STAGES];
 	uint32_t trigger_value[NUM_TRIGGER_STAGES];
+	uint32_t trigger_rising [NUM_TRIGGER_STAGES];
+	uint32_t trigger_falling [NUM_TRIGGER_STAGES];
 	int num_stages;
 	uint16_t flag_reg;
 

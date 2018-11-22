@@ -481,30 +481,15 @@ static int set_trigger(const struct sr_dev_inst *sdi, int stage)
 	devc = sdi->priv;
 	serial = sdi->conn;
 
-	cmd = CMD_SET_TRIGGER_MASK + stage * 4;
-	arg[0] = devc->trigger_mask[stage] & 0xff;
-	arg[1] = (devc->trigger_mask[stage] >> 8) & 0xff;
-	arg[2] = (devc->trigger_mask[stage] >> 16) & 0xff;
-	arg[3] = (devc->trigger_mask[stage] >> 24) & 0xff;
+	cmd = CMD_SET_TRIGGER_VALUE;
+	arg[0] = 0x00;
+	arg[1] = 0x00;
+	arg[2] = devc->trigger_falling;
+	arg[3] = devc->trigger_rising;
 	if (acsp_send_longcommand(serial, cmd, arg) != SR_OK)
 		return SR_ERR;
 
-	cmd = CMD_SET_TRIGGER_VALUE + stage * 4;
-	arg[0] = devc->trigger_value[stage] & 0xff;
-	arg[1] = (devc->trigger_value[stage] >> 8) & 0xff;
-	arg[2] = (devc->trigger_value[stage] >> 16) & 0xff;
-	arg[3] = (devc->trigger_value[stage] >> 24) & 0xff;
-	if (acsp_send_longcommand(serial, cmd, arg) != SR_OK)
-		return SR_ERR;
 
-	cmd = CMD_SET_TRIGGER_CONFIG + stage * 4;
-	arg[0] = arg[1] = arg[3] = 0x00;
-	arg[2] = stage;
-	if (stage == devc->num_stages)
-		/* Last stage, fire when this one matches. */
-		arg[3] |= TRIGGER_START;
-	if (acsp_send_longcommand(serial, cmd, arg) != SR_OK)
-		return SR_ERR;
 	sr_dbg("Exiting set trigger gracefully");
 	return SR_OK;
 }

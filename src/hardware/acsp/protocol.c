@@ -139,6 +139,16 @@ SR_PRIV int acsp_convert_trigger(const struct sr_dev_inst *sdi)
 			devc->trigger_mask[stage->stage] |= 1 << match->channel->index;
 			if (match->match == SR_TRIGGER_ONE)
 				devc->trigger_value[stage->stage] |= 1 << match->channel->index;
+			if (match->match == SR_TRIGGER_RISING)
+			{
+				sr_dbg("Setting Rising edge trigger channel: %d\n", match->channel->index);
+				devc->trigger_rising[stage->stage] |= 1 << match->channel->index;
+			}
+			else if (match->match == SR_TRIGGER_FALLING)
+			{
+				sr_dbg("Setting Falling edge trigger channel: %d\n", match->channel->index);
+				devc->trigger_falling[stage->stage] |= 1 << match->channel->index;
+			}
 		}
 	}
 
