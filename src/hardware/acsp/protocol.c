@@ -113,6 +113,7 @@ SR_PRIV int acsp_convert_trigger(const struct sr_dev_inst *sdi)
 
 	devc = sdi->priv;
 
+	// If NUM_TRIGGER_STAGES is 1, then this will run twice
 	devc->num_stages = 0;
 	for (i = 0; i < NUM_TRIGGER_STAGES; i++) {
 		devc->trigger_mask[i] = 0;
