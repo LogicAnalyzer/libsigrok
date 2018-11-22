@@ -117,6 +117,8 @@ SR_PRIV int acsp_convert_trigger(const struct sr_dev_inst *sdi)
 	for (i = 0; i < NUM_TRIGGER_STAGES; i++) {
 		devc->trigger_mask[i] = 0;
 		devc->trigger_value[i] = 0;
+		devc->trigger_rising[i] = 0;
+		devc->trigger_falling[i] = 0;
 	}
 
 	if (!(trigger = sr_session_trigger_get(sdi->session)))
