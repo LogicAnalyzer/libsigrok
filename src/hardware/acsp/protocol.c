@@ -538,15 +538,17 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			 * the acsp sends its sample buffer backwards.
 			 * store it in reverse order here, so we can dump
 			 * this on the session bus later.
+			 * TODO: Remove this feature. SUMP only
 			 */
-			// offset = (devc->limit_samples - devc->num_samples) * 4;
-			// for (i = 0; i <= devc->rle_count; i++) {
-			// 	memcpy(devc->raw_sample_buf + offset + (i * 4),
-			// 	       devc->sample, 4);
-			// }
-			// memset(devc->sample, 0, 4);
-			// devc->num_bytes = 0;
-			// devc->rle_count = 0;
+			
+			offset = (devc->limit_samples - devc->num_samples) * 4;
+			for (i = 0; i <= devc->rle_count; i++) {
+				memcpy(devc->raw_sample_buf + offset + (i * 4),
+				       devc->sample, 4);
+			}
+			memset(devc->sample, 0, 4);
+			devc->num_bytes = 0;
+			devc->rle_count = 0;
 		}
 	} else {
 		/*
