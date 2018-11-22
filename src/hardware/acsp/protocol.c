@@ -359,8 +359,9 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 	/* Calculate actual samplerate used and complain if it is different
 	 * from the requested.
 	 */
-	sr_dbg("Calculate samplerate");
 	devc->cur_samplerate = CLOCK_RATE / (devc->cur_samplerate_divider + 1);
+	sr_dbg("Calculate samplerate (%" PRIu64 " /( %" PRIu64 " + 1)= %" PRIu64 "",
+	 CLOCK_RATE, devc->cur_samplerate_divider, devc->cur_samplerate); 
 	if (devc->flag_reg & FLAG_DEMUX)
 		sr_dbg("devc->flag_reg & FLAG_DEMUX");
 		devc->cur_samplerate *= 2;
