@@ -24,11 +24,14 @@ SR_PRIV int acsp_send_shortcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command)
 {
 	sr_dbg("Now Entering acsp_send_shortcommand\n");
-	char buf[1];
+	char buf[5];
 
 	sr_dbg("Sending cmd 0x%.2x.", command);
-	buf[0] = command;
-	if (serial_write_blocking(serial, buf, 1, serial_timeout(serial, 1)) != 1)
+	for(int i=0; i<5; ++i){//send command 5 times for ACSP
+		buf[i] = command;
+	}
+
+	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 5)
 		return SR_ERR;
 
 	if (serial_drain(serial) != 0)
