@@ -570,20 +570,20 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	/* Samplerate. */
 	sr_dbg("Setting samplerate to %" PRIu64 "Hz (divider %u)",
 			devc->cur_samplerate, devc->cur_samplerate_divider);
-	arg[0] = devc->cur_samplerate_divider & 0xff;
-	arg[1] = (devc->cur_samplerate_divider & 0xff00) >> 8;
-	arg[2] = (devc->cur_samplerate_divider & 0xff0000) >> 16;
-	arg[3] = 0x00;
+	arg[3] = devc->cur_samplerate_divider & 0xff;
+	arg[2] = (devc->cur_samplerate_divider & 0xff00) >> 8;
+	arg[1] = (devc->cur_samplerate_divider & 0xff0000) >> 16;
+	arg[0] = 0x00;
 	if (acsp_send_longcommand(serial, CMD_SET_DIVIDER, arg) != SR_OK)
 		return SR_ERR;
 
 	/* Send sample limit and pre/post-trigger capture ratio. */
 	sr_dbg("Setting sample limit %d, trigger point at %d",
 			(readcount - 1) * 4, (delaycount - 1) * 4);
-	arg[0] = ((readcount - 1) & 0xff);
-	arg[1] = ((readcount - 1) & 0xff00) >> 8;
-	arg[2] = ((delaycount - 1) & 0xff);
-	arg[3] = ((delaycount - 1) & 0xff00) >> 8;
+	arg[3] = ((readcount - 1) & 0xff);
+	arg[2] = ((readcount - 1) & 0xff00) >> 8;
+	arg[1] = ((delaycount - 1) & 0xff);
+	arg[0] = ((delaycount - 1) & 0xff00) >> 8;
 	if (acsp_send_longcommand(serial, CMD_CAPTURE_SIZE, arg) != SR_OK)
 		return SR_ERR;
 
@@ -597,7 +597,7 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	/*
 	 * Enable/disable acsp channel groups in the flag register according
 	 * to the channel mask. 1 means "disable channel".
-	 */
+	 *///TODO: flags need to be adjusted to ACSP
 	devc->flag_reg |= ~(acsp_changrp_mask << 2) & 0x3c;
 	arg[0] = devc->flag_reg & 0xff;
 	arg[1] = devc->flag_reg >> 8;
