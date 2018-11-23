@@ -426,7 +426,7 @@ static int config_list(uint32_t key, GVariant **data,
 		*data = std_gvar_samplerates_steps(ARRAY_AND_SIZE(samplerates));
 		break;
 	case SR_CONF_TRIGGER_MATCH:
-		sr_dbg("SR_CONF_TRIGGER_MATC");
+		sr_dbg("SR_CONF_TRIGGER_MATCH");
 		*data = std_gvar_array_i32(ARRAY_AND_SIZE(trigger_matches));
 		break;
 	case SR_CONF_PATTERN_MODE:
@@ -484,8 +484,8 @@ static int set_trigger(const struct sr_dev_inst *sdi, int stage)
 	cmd = CMD_SET_TRIGGER_VALUE;
 	arg[0] = 0x00;
 	arg[1] = 0x00;
-	arg[2] = devc->trigger_falling;
-	arg[3] = devc->trigger_rising;
+	arg[2] = devc->trigger_falling[0];
+	arg[3] = devc->trigger_rising[0];
 	if (acsp_send_longcommand(serial, cmd, arg) != SR_OK)
 		return SR_ERR;
 
