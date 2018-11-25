@@ -27,7 +27,7 @@ SR_PRIV int acsp_send_shortcommand(struct sr_serial_dev_inst *serial,
 	char buf[1];
 
 	sr_dbg("Sending cmd 0x%.2x.", command);
-
+	buf[0] = command;
 	if (serial_write_blocking(serial, buf, 1, serial_timeout(serial, 1)) != 1)
 		return SR_ERR;
 
