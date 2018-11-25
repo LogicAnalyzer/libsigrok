@@ -105,6 +105,8 @@ SR_PRIV int acsp_send_shortcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command);
 SR_PRIV int acsp_send_longcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command, uint8_t *data);
+SR_PRIV int acsp_send_five_short(struct sr_serial_dev_inst *serial,
+		uint8_t command);
 SR_PRIV int acsp_send_reset(struct sr_serial_dev_inst *serial);
 SR_PRIV int acsp_send_id_request(struct sr_serial_dev_inst *serial);
 SR_PRIV int acsp_send_metadata_request(struct sr_serial_dev_inst *serial);
