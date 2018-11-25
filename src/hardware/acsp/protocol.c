@@ -59,25 +59,46 @@ SR_PRIV int acsp_send_longcommand(struct sr_serial_dev_inst *serial,
 	return SR_OK;
 }
 
+SR_PRIV int acsp_send_five_short(struct sr_serial_dev_inst *serial,
+		uint8_t command)
+{
+	char buf[5];
+
+	sr_dbg("Sending cmd 0x%.2x", command,
+			data[0], data[1], data[2], data[3]);
+	buf[0] = command;
+	buf[1] = command;
+	buf[2] = command;
+	buf[3] = command;
+	buf[4] = command;
+	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 5)
+		return SR_ERR;
+
+	if (serial_drain(serial) != 0)
+		return SR_ERR;
+
+	return SR_OK;
+}
+
 SR_PRIV int acsp_send_reset(struct sr_serial_dev_inst *serial)
 {
 	sr_dbg("Now Entering acsp_send_reset\n");
 
-	return acsp_send_shortcommand(serial, CMD_RESET);
+	return acsp_send_five_short(serial, CMD_RESET);
 }
 
 SR_PRIV int acsp_send_id_request(struct sr_serial_dev_inst *serial)
 {
 	sr_dbg("Now Entering acsp_id_request\n");
 
-	return acsp_send_shortcommand(serial, CMD_ID);	
+	return acsp_send_five_short(serial, CMD_ID);	
 }
 
 SR_PRIV int acsp_send_metadata_request(struct sr_serial_dev_inst *serial)
 {
 	sr_dbg("Now Entering acsp_send_metadata_request\n");
 
-	return acsp_send_shortcommand(serial, CMD_METADATA);	
+	return acsp_send_five_short(serial, CMD_METADATA);	
 }
 
 /* Configures the channel mask based on which channels are enabled. */
