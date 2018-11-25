@@ -64,8 +64,7 @@ SR_PRIV int acsp_send_five_short(struct sr_serial_dev_inst *serial,
 {
 	char buf[5];
 
-	sr_dbg("Sending cmd 0x%.2x", command,
-			data[0], data[1], data[2], data[3]);
+	sr_dbg("Sending cmd 0x%.2x", command);
 	buf[0] = command;
 	buf[1] = command;
 	buf[2] = command;
