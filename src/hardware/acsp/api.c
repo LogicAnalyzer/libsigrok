@@ -67,9 +67,7 @@ static const char *patterns[] = {
 
 /* Channels are numbered 0-31 (on the PCB silkscreen). */
 SR_PRIV const char *acsp_channel_names[] = {
-	"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-	"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23",
-	"24", "25", "26", "27", "28", "29", "30", "31",
+	"0", "1", "2", "3", "4", "5", "6", "7",
 };
 
 /* Default supported samplerates, can be overridden by device metadata. */
@@ -532,7 +530,7 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	 * buffer.
 	 */
 	samplecount = MIN(devc->max_samples / num_acsp_changrp, devc->limit_samples);
-	readcount = samplecount / 4;
+	readcount = samplecount;
 
 	/* Rather read too many samples than too few. */
 	if (samplecount % 4 != 0)
@@ -579,7 +577,7 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 
 	/* Send sample limit and pre/post-trigger capture ratio. */
 	sr_dbg("Setting sample limit %d, trigger point at %d",
-			(readcount - 1) * 4, (delaycount - 1) * 4);
+			(readcount - 1), (delaycount - 1));
 	arg[3] = ((readcount - 1) & 0xff);
 	arg[2] = ((readcount - 1) & 0xff00) >> 8;
 	arg[1] = ((delaycount - 1) & 0xff);

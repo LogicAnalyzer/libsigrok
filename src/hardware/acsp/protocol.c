@@ -83,21 +83,21 @@ SR_PRIV int acsp_send_reset(struct sr_serial_dev_inst *serial)
 {
 	sr_dbg("Now Entering acsp_send_reset\n");
 
-	return acsp_send_five_short(serial, CMD_RESET);
+	return acsp_send_shortcommand(serial, CMD_RESET);
 }
 
 SR_PRIV int acsp_send_id_request(struct sr_serial_dev_inst *serial)
 {
 	sr_dbg("Now Entering acsp_id_request\n");
 
-	return acsp_send_five_short(serial, CMD_ID);	
+	return acsp_send_shortcommand(serial, CMD_ID);	
 }
 
 SR_PRIV int acsp_send_metadata_request(struct sr_serial_dev_inst *serial)
 {
 	sr_dbg("Now Entering acsp_send_metadata_request\n");
 
-	return acsp_send_five_short(serial, CMD_METADATA);	
+	return acsp_send_shortcommand(serial, CMD_METADATA);	
 }
 
 /* Configures the channel mask based on which channels are enabled. */
@@ -183,7 +183,8 @@ SR_PRIV struct dev_context *acsp_dev_new(void)
 	devc = g_malloc0(sizeof(struct dev_context));
 
 	/* Device-specific settings */
-	devc->max_samples = devc->max_samplerate = devc->protocol_version = 0;
+	devc->max_samplerate = devc->protocol_version = 0;
+	devc->max_samples = 65535;
 
 	/* Acquisition settings */
 	devc->limit_samples = devc->capture_ratio = 0;
@@ -290,14 +291,17 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 				break;
 			case 0x01:
 				/* Amount of sample memory available (bytes) */
+				sr_dbg("Setting max_samples to %d", tmp_int);
 				devc->max_samples = tmp_int;
 				break;
 			case 0x02:
 				/* Amount of dynamic memory available (bytes) */
 				/* what is this for? */
+				sr_dbg("Nothing should be here %d", tmp_int);
 				break;
 			case 0x03:
 				/* Maximum sample rate (Hz) */
+				sr_dbg("Setting max_samplerate to %d Hz", tmp_int);
 				devc->max_samplerate = tmp_int;
 				break;
 			case 0x04:
@@ -377,7 +381,7 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 		devc->max_channels = NUM_CHANNELS / 2;
 		devc->cur_samplerate_divider = (CLOCK_RATE * 2 / samplerate) - 1;
 	} else {
-		sr_dbg("! samplerate > CLOCK_RATE");
+		sr_dbg("NOT samplerate > CLOCK_RATE");
 		sr_info("Disabling demux mode.");
 		devc->flag_reg &= ~FLAG_DEMUX;
 		devc->flag_reg |= FLAG_FILTER;
