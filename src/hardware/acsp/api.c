@@ -441,12 +441,16 @@ static int config_list(uint32_t key, GVariant **data,
 		devc = sdi->priv;
 		sr_dbg("After sdi->priv");
 		if (devc->flag_reg & FLAG_RLE)
+		{
 			sr_dbg("devc->flag_reg & FLAG_RLE");
 			return SR_ERR_NA;
+		}
 		if (devc->max_samples == 0)
+		{
 			/* Device didn't specify sample memory size in metadata. */
 			sr_dbg("devc->max_samples == 0");
 			return SR_ERR_NA;
+		}
 		/*
 		 * Channel groups are turned off if no channels in that group are
 		 * enabled, making more room for samples for the enabled group.
@@ -456,8 +460,10 @@ static int config_list(uint32_t key, GVariant **data,
 		num_acsp_changrp = 0;
 		for (i = 0; i < 4; i++) {
 			if (devc->channel_mask & (0xff << (i * 8)))
+			{
 				sr_dbg("devc->channel_mask & (0xff << (i * 8))");
 				num_acsp_changrp++;
+			}
 		}
 
 		*data = std_gvar_tuple_u64(MIN_NUM_SAMPLES,
