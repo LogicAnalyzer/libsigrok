@@ -433,9 +433,10 @@ static int config_list(uint32_t key, GVariant **data,
 		break;
 	case SR_CONF_LIMIT_SAMPLES:
 		sr_dbg("!!!!!!! SR_CONF_LIMIT_SAMPLES");
-		if (!sdi)
+		if (!sdi){
 			sr_dbg("Not sdi");
 			return SR_ERR_ARG;
+		}
 		sr_dbg("Before sdi->priv");
 		devc = sdi->priv;
 		sr_dbg("After sdi->priv");
