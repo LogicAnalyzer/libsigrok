@@ -436,7 +436,9 @@ static int config_list(uint32_t key, GVariant **data,
 		if (!sdi)
 			sr_dbg("Not sdi");
 			return SR_ERR_ARG;
+		sr_dbg("Before sdi->priv");
 		devc = sdi->priv;
+		sr_dbg("After sdi->priv");
 		if (devc->flag_reg & FLAG_RLE)
 			sr_dbg("devc->flag_reg & FLAG_RLE");
 			return SR_ERR_NA;
