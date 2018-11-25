@@ -183,8 +183,7 @@ SR_PRIV struct dev_context *acsp_dev_new(void)
 	devc = g_malloc0(sizeof(struct dev_context));
 
 	/* Device-specific settings */
-	devc->max_samplerate = devc->protocol_version = 0;
-	devc->max_samples = 65535;
+	devc->max_samples = devc->max_samplerate = devc->protocol_version = 0;
 
 	/* Acquisition settings */
 	devc->limit_samples = devc->capture_ratio = 0;
@@ -293,6 +292,7 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 				/* Amount of sample memory available (bytes) */
 				sr_dbg("Setting max_samples to %d", tmp_int);
 				devc->max_samples = tmp_int;
+				devc->limit_samples = devc->max_samples;
 				break;
 			case 0x02:
 				/* Amount of dynamic memory available (bytes) */

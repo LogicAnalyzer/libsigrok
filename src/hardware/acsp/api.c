@@ -432,7 +432,7 @@ static int config_list(uint32_t key, GVariant **data,
 		*data = g_variant_new_strv(ARRAY_AND_SIZE(patterns));
 		break;
 	case SR_CONF_LIMIT_SAMPLES:
-		sr_dbg("SR_CONF_LIMIT_SAMPLES");
+		sr_dbg("!!!!!!! SR_CONF_LIMIT_SAMPLES");
 		if (!sdi)
 			sr_dbg("Not sdi");
 			return SR_ERR_ARG;

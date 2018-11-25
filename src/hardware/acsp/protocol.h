@@ -34,6 +34,7 @@
 #define CLOCK_RATE                 SR_MHZ(100)
 #define MIN_NUM_SAMPLES            4
 #define DEFAULT_SAMPLERATE         SR_KHZ(100)
+#define MAX_NUM_SAMPLES			   65535
 
 /* Command opcodes */
 #define CMD_RESET                  0x00
