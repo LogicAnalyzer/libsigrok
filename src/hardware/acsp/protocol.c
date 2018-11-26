@@ -564,10 +564,10 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			 * TODO: Remove this feature. SUMP only
 			 */
 			
-			sr_dbg("REVERSE: limit: %d, samples: %d",
+			//sr_dbg("REVERSE: limit: %d, samples: %d",
 					devc->limit_samples, devc->num_samples);
 			offset = (devc->limit_samples - devc->num_samples);
-			sr_dbg("REVERSE: offset: %d", offset);
+			//sr_dbg("REVERSE: offset: %d", offset);
 			
 			for (i = 0; i <= devc->rle_count; i++) {
 				memcpy(devc->raw_sample_buf + offset + (i),
@@ -613,14 +613,20 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			sr_dbg("HUNT: 5");
 			/* Send post-trigger samples. */
 			packet.type = SR_DF_LOGIC;
+			sr_dbg("HUNT: 6");
 			packet.payload = &logic;
+			sr_dbg("HUNT: 7");
 			logic.length = (devc->num_samples * 1) - (devc->trigger_at * 1);
+			sr_dbg("HUNT: 8");
 			logic.unitsize = 1;
+			sr_dbg("HUNT: 9");
 			logic.data = devc->raw_sample_buf + devc->trigger_at * 1 +
 				(devc->limit_samples - devc->num_samples) * 1;
+			sr_dbg("HUNT: 10");
 			sr_session_send(sdi, &packet);
+			sr_dbg("HUNT: 11");
 		} else {
-			sr_dbg("HUNT: 6");
+			sr_dbg("HUNT: 12");
 			/* no trigger was used */
 			packet.type = SR_DF_LOGIC;
 			packet.payload = &logic;
@@ -630,12 +636,12 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 				(devc->limit_samples - devc->num_samples) * 1;
 			sr_session_send(sdi, &packet);
 		}
-		sr_dbg("HUNT: 7");
+		sr_dbg("HUNT: 13");
 		g_free(devc->raw_sample_buf);
 
-        sr_dbg("HUNT: 8");
+        sr_dbg("HUNT: 14");
 		serial_flush(serial);
-		sr_dbg("HUNT: 9");
+		sr_dbg("HUNT: 15");
 		acsp_abort_acquisition(sdi);
 	}
 	return TRUE;
