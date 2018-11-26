@@ -502,63 +502,60 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			 * Got a full sample. Convert from the acsp's little-endian
 			 * sample to the local format.
 			 */
-			//sample = devc->sample[0] | (devc->sample[1] << 8) \
-			//		| (devc->sample[2] << 16) | (devc->sample[3] << 24);
+			sample = devc->sample[0] | (devc->sample[1] << 8) \
+					| (devc->sample[2] << 16) | (devc->sample[3] << 24);
 			//sr_dbg("Received sample 0x%.*x.", devc->num_bytes * 2, sample);
-			memcpy(devc->raw_sample_buf++, devc->sample, 1);
-			sr_spew("Expanded sample: 0x%.2x.", sample);
-			//sr_spew("raw_sample_buf: 0x%.2x", raw_sample_buf);
-			//if (devc->flag_reg & FLAG_RLE) {
-			// 	/*
-			// 	 * In RLE mode the high bit of the sample is the
-			// 	 * "count" flag, meaning this sample is the number
-			// 	 * of times the previous sample occurred.
-			// 	 */
-			// 	if (devc->sample[devc->num_bytes - 1] & 0x80) {
-			// 		/* Clear the high bit. */
-			// 		sample &= ~(0x80 << (devc->num_bytes - 1) * 8);
-			// 		devc->rle_count = sample;
-			// 		devc->cnt_samples_rle += devc->rle_count;
-			// 		sr_dbg("RLE count: %u.", devc->rle_count);
-			// 		devc->num_bytes = 0;
-			// 		return TRUE;
-			// 	}
-			// }
-			// devc->num_samples += devc->rle_count + 1;
-			// if (devc->num_samples > devc->limit_samples) {
-			// 	/* Save us from overrunning the buffer. */
-			// 	devc->rle_count -= devc->num_samples - devc->limit_samples;
-			// 	devc->num_samples = devc->limit_samples;
-			// }
+			if (devc->flag_reg & FLAG_RLE) {
+				/*
+				 * In RLE mode the high bit of the sample is the
+				 * "count" flag, meaning this sample is the number
+				 * of times the previous sample occurred.
+				 */
+				if (devc->sample[devc->num_bytes - 1] & 0x80) {
+					/* Clear the high bit. */
+					sample &= ~(0x80 << (devc->num_bytes - 1) * 8);
+					devc->rle_count = sample;
+					devc->cnt_samples_rle += devc->rle_count;
+					sr_dbg("RLE count: %u.", devc->rle_count);
+					devc->num_bytes = 0;
+					return TRUE;
+				}
+			}
+			devc->num_samples += devc->rle_count + 1;
+			if (devc->num_samples > devc->limit_samples) {
+				/* Save us from overrunning the buffer. */
+				devc->rle_count -= devc->num_samples - devc->limit_samples;
+				devc->num_samples = devc->limit_samples;
+			}
 
-			// if (num_acsp_changrp < 4) {
-			// 	/*
-			// 	 * Some channel groups may have been turned
-			// 	 * off, to speed up transfer between the
-			// 	 * hardware and the PC. Expand that here before
-			// 	 * submitting it over the session bus --
-			// 	 * whatever is listening on the bus will be
-			// 	 * expecting a full 32-bit sample, based on
-			// 	 * the number of channels.
-			// 	 */
-			// 	j = 0;
-			// 	memset(devc->tmp_sample, 0, 4);
-			// 	for (i = 0; i < 4; i++) {
-			// 		if (((devc->flag_reg >> 2) & (1 << i)) == 0) {
-			// 			/*
-			// 			 * This channel group was
-			// 			 * enabled, copy from received
-			// 			 * sample.
-			// 			 */
-			// 			devc->tmp_sample[i] = devc->sample[j++];
-			// 		} else if (devc->flag_reg & FLAG_DEMUX && (i > 2)) {
-			// 			/* group 2 & 3 get added to 0 & 1 */
-			// 			devc->tmp_sample[i - 2] = devc->sample[j++];
-			// 		}
-			// 	}
-			// 	memcpy(devc->sample, devc->tmp_sample, 4);
-			// 	sr_spew("Expanded sample: 0x%.8x.", sample);
-			// }
+			if (num_acsp_changrp < 4) {
+				/*
+				 * Some channel groups may have been turned
+				 * off, to speed up transfer between the
+				 * hardware and the PC. Expand that here before
+				 * submitting it over the session bus --
+				 * whatever is listening on the bus will be
+				 * expecting a full 32-bit sample, based on
+				 * the number of channels.
+				 */
+				j = 0;
+				memset(devc->tmp_sample, 0, 4);
+				for (i = 0; i < 4; i++) {
+					if (((devc->flag_reg >> 2) & (1 << i)) == 0) {
+						/*
+						 * This channel group was
+						 * enabled, copy from received
+						 * sample.
+						 */
+						devc->tmp_sample[i] = devc->sample[j++];
+					} else if (devc->flag_reg & FLAG_DEMUX && (i > 2)) {
+						/* group 2 & 3 get added to 0 & 1 */
+						devc->tmp_sample[i - 2] = devc->sample[j++];
+					}
+				}
+				memcpy(devc->sample, devc->tmp_sample, 4);
+				sr_spew("Expanded sample: 0x%.8x.", sample);
+			}
 
 			/*
 			 * the acsp sends its sample buffer backwards.
@@ -569,11 +566,14 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			
 			//sr_dbg("REVERSE: limit: %d, samples: %d",
 			//		devc->limit_samples, devc->num_samples);
-			//offset = (devc->limit_samples - devc->num_samples);
+			offset = (devc->num_samples);
 			//sr_dbg("REVERSE: offset: %d", offset);
 			
-			// memcpy(devc->raw_sample_buf++, devc->sample, 1);
-			// memset(devc->sample, 0, 1);
+			for (i = 0; i <= devc->rle_count; i++) {
+				memcpy(devc->raw_sample_buf + offset + (i),
+				       devc->sample, 1);
+			}
+			memset(devc->sample, 0, 1);
 			devc->num_bytes = 0;
 			devc->rle_count = 0;
 		}
