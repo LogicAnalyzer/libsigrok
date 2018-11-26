@@ -587,10 +587,10 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	/* Send sample limit and pre/post-trigger capture ratio. */
 	sr_dbg("Setting sample limit %d, trigger point at %d",
 			(readcount - 1), (delaycount - 1));
-	arg[3] = ((readcount - 1) & 0xff);
-	arg[2] = ((readcount - 1) & 0xff00) >> 8;
-	arg[1] = ((delaycount - 1) & 0xff);
-	arg[0] = ((delaycount - 1) & 0xff00) >> 8;
+	arg[1] = ((readcount - 1) & 0xff);
+	arg[0] = ((readcount - 1) & 0xff00) >> 8;
+	arg[3] = ((delaycount - 1) & 0xff);
+	arg[2] = ((delaycount - 1) & 0xff00) >> 8;
 	if (acsp_send_longcommand(serial, CMD_CAPTURE_SIZE, arg) != SR_OK)
 		return SR_ERR;
 
