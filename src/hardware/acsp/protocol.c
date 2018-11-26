@@ -566,13 +566,10 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			
 			//sr_dbg("REVERSE: limit: %d, samples: %d",
 			//		devc->limit_samples, devc->num_samples);
-			offset = (devc->limit_samples - devc->num_samples);
+			//offset = (devc->limit_samples - devc->num_samples);
 			//sr_dbg("REVERSE: offset: %d", offset);
 			
-			for (i = 0; i <= devc->rle_count; i++) {
-				memcpy(devc->raw_sample_buf + offset + (i),
-				       devc->sample, 1);
-			}
+			memcpy(devc->raw_sample_buf, devc->sample, 1)
 			memset(devc->sample, 0, 1);
 			devc->num_bytes = 0;
 			devc->rle_count = 0;
