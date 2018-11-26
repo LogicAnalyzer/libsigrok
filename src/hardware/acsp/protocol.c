@@ -468,13 +468,13 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 	}
 
 	if (devc->num_transfers++ == 0) {
-		devc->raw_sample_buf = g_try_malloc(devc->limit_samples);
+		devc->raw_sample_buf = g_try_malloc(devc->limit_samples * 4);
 		if (!devc->raw_sample_buf) {
 			sr_err("Sample buffer malloc failed.");
 			return FALSE;
 		}
 		/* fill with 1010... for debugging */
-		memset(devc->raw_sample_buf, 0x82, devc->limit_samples);
+		memset(devc->raw_sample_buf, 0x82, devc->limit_samples * 4);
 	}
 
 	num_acsp_changrp = 0;
@@ -502,9 +502,9 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			 * Got a full sample. Convert from the acsp's little-endian
 			 * sample to the local format.
 			 */
-			//sample = devc->sample[0] | (devc->sample[1] << 8) \
-			//		| (devc->sample[2] << 16) | (devc->sample[3] << 24);
-			sr_dbg("Received sample 0x%.*x.", devc->num_bytes * 2, sample);
+			sample = devc->sample[0] | (devc->sample[1] << 8) \
+					| (devc->sample[2] << 16) | (devc->sample[3] << 24);
+			//sr_dbg("Received sample 0x%.*x.", devc->num_bytes * 2, sample);
 			if (devc->flag_reg & FLAG_RLE) {
 				/*
 				 * In RLE mode the high bit of the sample is the
@@ -568,14 +568,11 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			//		devc->limit_samples, devc->num_samples);
 			offset = (devc->limit_samples - devc->num_samples);
 			//sr_dbg("REVERSE: offset: %d", offset);
-			memcpy(devc->raw_sample_buf, devc->sample, 1);
-			memset(devc->sample, 0, 1);
-			// for (i = 0; i <= devc->rle_count; i++) {
-			// 	memcpy(devc->raw_sample_buf + offset + (i),
-			// 	       devc->sample, 1);
-			// }
 			
-			/* Reset all the values */
+			for (i = 0; i <= devc->rle_count; i++) {
+				memcpy(devc->raw_sample_buf + offset + (i),
+				       devc->sample, 1);
+			}
 			memset(devc->sample, 0, 1);
 			devc->num_bytes = 0;
 			devc->rle_count = 0;
