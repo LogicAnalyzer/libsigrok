@@ -507,7 +507,7 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			//sr_dbg("Received sample 0x%.*x.", devc->num_bytes * 2, sample);
 			memcpy(devc->raw_sample_buf++, devc->sample, 1);
 			sr_spew("Expanded sample: 0x%.2x.", sample);
-			sr_spew("raw_sample_buf: 0x%.2x", raw_sample_buf);
+			//sr_spew("raw_sample_buf: 0x%.2x", raw_sample_buf);
 			//if (devc->flag_reg & FLAG_RLE) {
 			// 	/*
 			// 	 * In RLE mode the high bit of the sample is the
