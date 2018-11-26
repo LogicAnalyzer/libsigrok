@@ -569,7 +569,6 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			offset = (devc->limit_samples - devc->num_samples);
 			sr_dbg("REVERSE: offset: %d", offset);
 			
-			sr_dbg("REVERSE: this is where it is going to segfault");
 			for (i = 0; i <= devc->rle_count; i++) {
 				memcpy(devc->raw_sample_buf + offset + (i),
 				       devc->sample, 1);
@@ -596,10 +595,10 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 				/* There are pre-trigger samples, send those first. */
 				packet.type = SR_DF_LOGIC;
 				packet.payload = &logic;
-				logic.length = devc->trigger_at * 4;
-				logic.unitsize = 4;
+				logic.length = devc->trigger_at ;
+				logic.unitsize = 1;
 				logic.data = devc->raw_sample_buf +
-					(devc->limit_samples - devc->num_samples) * 4;
+					(devc->limit_samples - devc->num_samples) * 1;
 				sr_session_send(sdi, &packet);
 			}
 
@@ -610,19 +609,19 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			/* Send post-trigger samples. */
 			packet.type = SR_DF_LOGIC;
 			packet.payload = &logic;
-			logic.length = (devc->num_samples * 4) - (devc->trigger_at * 4);
-			logic.unitsize = 4;
-			logic.data = devc->raw_sample_buf + devc->trigger_at * 4 +
-				(devc->limit_samples - devc->num_samples) * 4;
+			logic.length = (devc->num_samples * 1) - (devc->trigger_at * 1);
+			logic.unitsize = 1;
+			logic.data = devc->raw_sample_buf + devc->trigger_at * 1 +
+				(devc->limit_samples - devc->num_samples) * 1;
 			sr_session_send(sdi, &packet);
 		} else {
 			/* no trigger was used */
 			packet.type = SR_DF_LOGIC;
 			packet.payload = &logic;
-			logic.length = devc->num_samples * 4;
-			logic.unitsize = 4;
+			logic.length = devc->num_samples * 1;
+			logic.unitsize = 1;
 			logic.data = devc->raw_sample_buf +
-				(devc->limit_samples - devc->num_samples) * 4;
+				(devc->limit_samples - devc->num_samples) * 1;
 			sr_session_send(sdi, &packet);
 		}
 		g_free(devc->raw_sample_buf);
