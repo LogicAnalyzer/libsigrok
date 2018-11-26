@@ -13,15 +13,13 @@ OPCODE | Description | Command (Following Four Bits)
 0xC1 | Set Basic Trigger Value | "command[15:8] enables channels 7-0 for falling edge detection |  command [7:0] enables channels 7-0 for rising edge detection |  both rising and falling supported."
 
 
-| Message | Description |
-| ------- | ----------- |
-| [0x00, 0x00, 0x00, 0x00, 0x00] | reset | 
-| [0xC1, 0x00, 0x00, 0x84, 0x80] | Set Trigger Values. Falling channels: 0, 5 Rising channels:  0 |
-| [0xC1, 0x00, 0x00, 0x84, 0x80] | Set Trigger Values. Falling channels: 0, 5 Rising channels:  0 |
-| [0x80, 0xE7, 0x03, 0x00, 0x00] | Set Divisor value: divisor=15,139,584, but out of order |
-| **Large Break** | Probably due to a function or scope change in libsigrok |
-| [0x81, 0xFF, 0x1F, 0xFF, 0x1F] | Read delay. read counter=65131, delay counter=65131 |
-| [0x82, 0x3A, 0x00, 0x00, 0x00] | Set the flags. FLAG_CHANNELGROUP_3 FLAG_CHANNELGROUP_2 FLAG_CHANNELGROUP_1 FLAG_CLOCK_EXTERNAL |
-| [0x01, 0x01, 0x01, 0x01, 0x01] | Arm the fucking trigger |
-| **Capture Begins** | |
-
+Pretriger Capture Issue
+|| Message || Description ||
+| ---- | -------- |
+| 00| RESET |
+| C1,00,00,01,00 | Set channel 0 to falling edge triggered|
+| C1,00,00,01,00 | Set channel 0 to falling edge triggered|
+| 80,00,00,03,E7 | Set sample rate to 100KHz |
+| 81,00,5E,00,83 | Read count = 94, Delay Count = 131 |
+| 82,38,00,00,00 | Set flags |
+| 01 | Start the fucking capture |

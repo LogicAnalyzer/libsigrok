@@ -67,9 +67,7 @@ static const char *patterns[] = {
 
 /* Channels are numbered 0-31 (on the PCB silkscreen). */
 SR_PRIV const char *acsp_channel_names[] = {
-	"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12",
-	"13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23",
-	"24", "25", "26", "27", "28", "29", "30", "31",
+	"0", "1", "2", "3", "4", "5", "6", "7",
 };
 
 /* Default supported samplerates, can be overridden by device metadata. */
@@ -434,18 +432,25 @@ static int config_list(uint32_t key, GVariant **data,
 		*data = g_variant_new_strv(ARRAY_AND_SIZE(patterns));
 		break;
 	case SR_CONF_LIMIT_SAMPLES:
-		sr_dbg("SR_CONF_LIMIT_SAMPLES");
-		if (!sdi)
+		sr_dbg("!!!!!!! SR_CONF_LIMIT_SAMPLES");
+		if (!sdi){
 			sr_dbg("Not sdi");
 			return SR_ERR_ARG;
+		}
+		sr_dbg("Before sdi->priv");
 		devc = sdi->priv;
+		sr_dbg("After sdi->priv");
 		if (devc->flag_reg & FLAG_RLE)
+		{
 			sr_dbg("devc->flag_reg & FLAG_RLE");
 			return SR_ERR_NA;
+		}
 		if (devc->max_samples == 0)
+		{
 			/* Device didn't specify sample memory size in metadata. */
 			sr_dbg("devc->max_samples == 0");
 			return SR_ERR_NA;
+		}
 		/*
 		 * Channel groups are turned off if no channels in that group are
 		 * enabled, making more room for samples for the enabled group.
@@ -455,8 +460,10 @@ static int config_list(uint32_t key, GVariant **data,
 		num_acsp_changrp = 0;
 		for (i = 0; i < 4; i++) {
 			if (devc->channel_mask & (0xff << (i * 8)))
+			{
 				sr_dbg("devc->channel_mask & (0xff << (i * 8))");
 				num_acsp_changrp++;
+			}
 		}
 
 		*data = std_gvar_tuple_u64(MIN_NUM_SAMPLES,
@@ -532,7 +539,7 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 	 * buffer.
 	 */
 	samplecount = MIN(devc->max_samples / num_acsp_changrp, devc->limit_samples);
-	readcount = samplecount / 4;
+	readcount = samplecount;
 
 	/* Rather read too many samples than too few. */
 	if (samplecount % 4 != 0)
@@ -551,9 +558,9 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 		sr_dbg("Send reset command before trigger configure");
 		if (acsp_send_reset(serial) != SR_OK)
 			return SR_ERR;
-
-		delaycount = readcount * (1 - devc->capture_ratio / 100.0);
-		devc->trigger_at = (readcount - delaycount) * 4 - devc->num_stages;
+		sr_dbg("capture_ratio: %d%", devc->capture_ratio);
+		delaycount = readcount * (devc->capture_ratio / 100.0);
+		devc->trigger_at = delaycount;
 		for (i = 0; i <= devc->num_stages; i++) {
 			sr_dbg("Setting acsp stage %d trigger.", i);
 			if ((ret = set_trigger(sdi, i)) != SR_OK)
@@ -579,11 +586,11 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 
 	/* Send sample limit and pre/post-trigger capture ratio. */
 	sr_dbg("Setting sample limit %d, trigger point at %d",
-			(readcount - 1) * 4, (delaycount - 1) * 4);
-	arg[3] = ((readcount - 1) & 0xff);
-	arg[2] = ((readcount - 1) & 0xff00) >> 8;
-	arg[1] = ((delaycount - 1) & 0xff);
-	arg[0] = ((delaycount - 1) & 0xff00) >> 8;
+			(readcount - 1), (delaycount - 1));
+	arg[1] = ((readcount - 1) & 0xff);
+	arg[0] = ((readcount - 1) & 0xff00) >> 8;
+	arg[3] = ((delaycount - 1) & 0xff);
+	arg[2] = ((delaycount - 1) & 0xff00) >> 8;
 	if (acsp_send_longcommand(serial, CMD_CAPTURE_SIZE, arg) != SR_OK)
 		return SR_ERR;
 

@@ -23,7 +23,6 @@
 SR_PRIV int acsp_send_shortcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command)
 {
-	sr_dbg("Now Entering acsp_send_shortcommand\n");
 	char buf[1];
 
 	sr_dbg("Sending cmd 0x%.2x.", command);
@@ -40,7 +39,6 @@ SR_PRIV int acsp_send_shortcommand(struct sr_serial_dev_inst *serial,
 SR_PRIV int acsp_send_longcommand(struct sr_serial_dev_inst *serial,
 		uint8_t command, uint8_t *data)
 {
-	sr_dbg("Now Entering acsp_send_longcommand\n");
 	char buf[5];
 
 	sr_dbg("Sending cmd 0x%.2x data 0x%.2x%.2x%.2x%.2x.", command,
@@ -59,31 +57,44 @@ SR_PRIV int acsp_send_longcommand(struct sr_serial_dev_inst *serial,
 	return SR_OK;
 }
 
+SR_PRIV int acsp_send_five_short(struct sr_serial_dev_inst *serial,
+		uint8_t command)
+{
+	char buf[5];
+
+	sr_dbg("Sending cmd 0x%.2x", command);
+	buf[0] = command;
+	buf[1] = command;
+	buf[2] = command;
+	buf[3] = command;
+	buf[4] = command;
+	if (serial_write_blocking(serial, buf, 5, serial_timeout(serial, 1)) != 5)
+		return SR_ERR;
+
+	if (serial_drain(serial) != 0)
+		return SR_ERR;
+
+	return SR_OK;
+}
+
 SR_PRIV int acsp_send_reset(struct sr_serial_dev_inst *serial)
 {
-	sr_dbg("Now Entering acsp_send_reset\n");
-
 	return acsp_send_shortcommand(serial, CMD_RESET);
 }
 
 SR_PRIV int acsp_send_id_request(struct sr_serial_dev_inst *serial)
 {
-	sr_dbg("Now Entering acsp_id_request\n");
-
 	return acsp_send_shortcommand(serial, CMD_ID);	
 }
 
 SR_PRIV int acsp_send_metadata_request(struct sr_serial_dev_inst *serial)
 {
-	sr_dbg("Now Entering acsp_send_metadata_request\n");
-
 	return acsp_send_shortcommand(serial, CMD_METADATA);	
 }
 
 /* Configures the channel mask based on which channels are enabled. */
 SR_PRIV void acsp_channel_mask(const struct sr_dev_inst *sdi)
 {
-	sr_dbg("Now Entering acsp_channel_mask\n");
 	struct dev_context *devc;
 	struct sr_channel *channel;
 	const GSList *l;
@@ -100,7 +111,6 @@ SR_PRIV void acsp_channel_mask(const struct sr_dev_inst *sdi)
 
 SR_PRIV int acsp_convert_trigger(const struct sr_dev_inst *sdi)
 {
-	sr_dbg("Now Entering acsp_convert_trigger\n");
 	struct dev_context *devc;
 	struct sr_trigger *trigger;
 	struct sr_trigger_stage *stage;
@@ -157,7 +167,6 @@ SR_PRIV int acsp_convert_trigger(const struct sr_dev_inst *sdi)
 
 SR_PRIV struct dev_context *acsp_dev_new(void)
 {
-	sr_dbg("Now Entering dev_context *acsp_dev_new(void)\n");
 	struct dev_context *devc;
 
 	devc = g_malloc0(sizeof(struct dev_context));
@@ -176,7 +185,6 @@ SR_PRIV struct dev_context *acsp_dev_new(void)
 
 SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 {
-	sr_dbg("Now Entering sr_dev_inst *acsp_get_metadata\n");
 	struct sr_dev_inst *sdi;
 	struct dev_context *devc;
 	uint32_t tmp_int, ui;
@@ -249,13 +257,11 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			g_string_free(tmp_str, TRUE);
 			break;
 		case 1:
-			sr_dbg("Entering case 1");
 			/* 32-bit unsigned integer */
 			
 			delay_ms = serial_timeout(serial, 6);
 			if (serial_read_blocking(serial, &tmp_int, 4, delay_ms) != 4)
 			{
-				sr_dbg("!!! didn't get 4 bytes from serial");
 				//break;
 			}	
 			tmp_int = RB32(&tmp_int);
@@ -270,14 +276,18 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 				break;
 			case 0x01:
 				/* Amount of sample memory available (bytes) */
+				sr_dbg("Setting max_samples to %d", tmp_int);
 				devc->max_samples = tmp_int;
+				devc->limit_samples = devc->max_samples;
 				break;
 			case 0x02:
 				/* Amount of dynamic memory available (bytes) */
 				/* what is this for? */
+				sr_dbg("Nothing should be here %d", tmp_int);
 				break;
 			case 0x03:
 				/* Maximum sample rate (Hz) */
+				sr_dbg("Setting max_samplerate to %d Hz", tmp_int);
 				devc->max_samplerate = tmp_int;
 				break;
 			case 0x04:
@@ -292,11 +302,9 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			break;
 		case 2:
 			/* 8-bit unsigned integer */
-			sr_dbg("Entering case 2");
 			delay_ms = serial_timeout(serial, 1);
 			if (serial_read_blocking(serial, &tmp_c, 1, delay_ms * 2) != 1)
 			{
-				sr_dbg("!!! didn't get a byte from serial");
 				//break;
 			}
 			sr_dbg("Got metadata key 0x%.2x value 0x%.2x. token 0x%.2x",
@@ -304,14 +312,12 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 			switch (token) {
 			case 0x00:
 				/* Number of usable channels */
-				sr_dbg("Number of usable channels found");
 				for (ui = 0; ui < tmp_c; ui++)
 					sr_channel_new(sdi, ui, SR_CHANNEL_LOGIC, TRUE,
 							acsp_channel_names[ui]);
 				break;
 			case 0x01:
 				/* protocol version */
-				sr_dbg("Protocol version found");
 				devc->protocol_version = tmp_c;
 				break;
 			default:
@@ -338,18 +344,13 @@ SR_PRIV struct sr_dev_inst *acsp_get_metadata(struct sr_serial_dev_inst *serial)
 SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 		const uint64_t samplerate)
 {
-	sr_dbg("Now Entering acsp_set_samplerate\n");
 	struct dev_context *devc;
-
-	sr_dbg("Setting devc");
 	devc = sdi->priv;
 	if (devc->max_samplerate && samplerate > devc->max_samplerate){
-		sr_dbg("devc->max_samplerate && samplerate > devc->max_samplerate");
 		return SR_ERR_SAMPLERATE;
 	}
 
 	if (samplerate > CLOCK_RATE) {
-		sr_dbg("samplerate > CLOCK_RATE");
 		sr_info("Enabling demux mode.");
 		devc->flag_reg |= FLAG_DEMUX;
 		devc->flag_reg &= ~FLAG_FILTER;
@@ -357,15 +358,14 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 		devc->max_channels = NUM_CHANNELS / 2;
 		devc->cur_samplerate_divider = (CLOCK_RATE * 2 / samplerate) - 1;
 	} else {
-		sr_dbg("! samplerate > CLOCK_RATE");
 		sr_info("Disabling demux mode.");
 		devc->flag_reg &= ~FLAG_DEMUX;
 		devc->flag_reg |= FLAG_FILTER;
 		devc->flag_reg = 0x00000000;
 		devc->max_channels = NUM_CHANNELS;
 		devc->cur_samplerate_divider = (CLOCK_RATE / samplerate) - 1;
-		sr_info("Calculated samplerate divider ( %" PRIu64 "/ %"
-		       PRIu64 ")-1 = %" PRIu64 " .", CLOCK_RATE, samplerate, devc->cur_samplerate_divider);
+		sr_dbg("Calculated samplerate divider ( %" PRIu64 " / % "
+		       PRIu64 " ) - 1 = %" PRIu64 " .", CLOCK_RATE, samplerate, devc->cur_samplerate_divider);
 	}
 
 	/* Calculate actual samplerate used and complain if it is different
@@ -376,12 +376,10 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 	 CLOCK_RATE, devc->cur_samplerate_divider, devc->cur_samplerate); 
 	if (devc->flag_reg & FLAG_DEMUX)
 	{
-		sr_dbg("devc->flag_reg & FLAG_DEMUX");
 		devc->cur_samplerate *= 2;
 	}
 	if (devc->cur_samplerate != samplerate)
 	{
-		sr_dbg("devc->cur_samplerate != samplerate");
 		sr_info("Can't match samplerate %" PRIu64 ", using %"
 		       PRIu64 ".", samplerate, devc->cur_samplerate);
 	}
@@ -391,37 +389,14 @@ SR_PRIV int acsp_set_samplerate(const struct sr_dev_inst *sdi,
 
 SR_PRIV void acsp_abort_acquisition(const struct sr_dev_inst *sdi)
 {
-	sr_dbg("Now Entering acsp_abort_acquisition\n");
 	struct sr_serial_dev_inst *serial;
-
 	serial = sdi->conn;
 	serial_source_remove(sdi->session, serial);
-
 	std_session_send_df_end(sdi);
 }
 
 SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 {
-	// sr_dbg("Now Entering acsp_receive_data\n");
-	// const struct sr_dev_inst *sdi;
-	// struct dev_context *devc;
-
-	// (void)fd;
-
-	// if (!(sdi = cb_data))
-	// 	return TRUE;
-
-	// if (!(devc = sdi->priv))
-	// 	return TRUE;
-
-	// if (revents == G_IO_IN) {
-	// 	/* TODO */ƒ
-	// }
-
-	// return TRUE;
-
-	/*----------above is the given code, below is from OLS----------*/
-
 	struct dev_context *devc;
 	struct sr_dev_inst *sdi;
 	struct sr_serial_dev_inst *serial;
@@ -540,12 +515,16 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			 * TODO: Remove this feature. SUMP only
 			 */
 			
-			offset = (devc->limit_samples - devc->num_samples) * 4;
+			//sr_dbg("REVERSE: limit: %d, samples: %d",
+			//		devc->limit_samples, devc->num_samples);
+			offset = (devc->num_samples);
+			//sr_dbg("REVERSE: offset: %d", offset);
+			
 			for (i = 0; i <= devc->rle_count; i++) {
-				memcpy(devc->raw_sample_buf + offset + (i * 4),
-				       devc->sample, 4);
+				memcpy(devc->raw_sample_buf + offset + (i),
+				       devc->sample, 1);
 			}
-			memset(devc->sample, 0, 4);
+			memset(devc->sample, 0, 1);
 			devc->num_bytes = 0;
 			devc->rle_count = 0;
 		}
@@ -567,38 +546,37 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 				/* There are pre-trigger samples, send those first. */
 				packet.type = SR_DF_LOGIC;
 				packet.payload = &logic;
-				logic.length = devc->trigger_at * 4;
-				logic.unitsize = 4;
+				logic.length = devc->trigger_at ;
+				logic.unitsize = 1;
 				logic.data = devc->raw_sample_buf +
-					(devc->limit_samples - devc->num_samples) * 4;
+					(devc->limit_samples - devc->num_samples) * 1;
 				sr_session_send(sdi, &packet);
 			}
 
 			/* Send the trigger. */
 			packet.type = SR_DF_TRIGGER;
 			sr_session_send(sdi, &packet);
-
 			/* Send post-trigger samples. */
 			packet.type = SR_DF_LOGIC;
 			packet.payload = &logic;
-			logic.length = (devc->num_samples * 4) - (devc->trigger_at * 4);
-			logic.unitsize = 4;
-			logic.data = devc->raw_sample_buf + devc->trigger_at * 4 +
-				(devc->limit_samples - devc->num_samples) * 4;
+			logic.length = (devc->num_samples * 1) - (devc->trigger_at * 1);
+			logic.unitsize = 1;
+			logic.data = devc->raw_sample_buf + devc->trigger_at * 1 +
+				(devc->limit_samples - devc->num_samples) * 1;
 			sr_session_send(sdi, &packet);
 		} else {
 			/* no trigger was used */
 			packet.type = SR_DF_LOGIC;
 			packet.payload = &logic;
-			logic.length = devc->num_samples * 4;
-			logic.unitsize = 4;
+			logic.length = devc->num_samples * 1;
+			logic.unitsize = 1;
 			logic.data = devc->raw_sample_buf +
-				(devc->limit_samples - devc->num_samples) * 4;
+				(devc->limit_samples - devc->num_samples) * 1;
 			sr_session_send(sdi, &packet);
 		}
 		g_free(devc->raw_sample_buf);
 
-		serial_flush(serial);
+        serial_flush(serial);
 		acsp_abort_acquisition(sdi);
 	}
 	return TRUE;
