@@ -467,6 +467,12 @@ src_libdrivers_la_SOURCES += \
 	src/hardware/openbench-logic-sniffer/protocol.c \
 	src/hardware/openbench-logic-sniffer/api.c
 endif
+if HW_ACSP
+src_libdrivers_la_SOURCES += \
+	src/hardware/acsp/protocol.h \
+	src/hardware/acsp/protocol.c \
+	src/hardware/acsp/api.c
+endif
 if HW_PCE_322A
 src_libdrivers_la_SOURCES += \
 	src/hardware/pce-322a/protocol.h \
@@ -508,6 +514,12 @@ src_libdrivers_la_SOURCES += \
 	src/hardware/saleae-logic-pro/protocol.h \
 	src/hardware/saleae-logic-pro/protocol.c \
 	src/hardware/saleae-logic-pro/api.c
+endif
+if HW_SCPI_DMM
+src_libdrivers_la_SOURCES += \
+	src/hardware/scpi-dmm/protocol.h \
+	src/hardware/scpi-dmm/protocol.c \
+	src/hardware/scpi-dmm/api.c
 endif
 if HW_SCPI_PPS
 src_libdrivers_la_SOURCES += \

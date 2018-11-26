@@ -218,6 +218,7 @@ m4_define([_SR_DRIVER], [
 m4_define([SR_DRIVER],
 	[_SR_DRIVER([$1], [$2], m4_expand([AS_TR_CPP([HW_$2])]), [$3])])
 
+SR_DRIVER([acsp], [acsp])
 SR_DRIVER([Agilent DMM], [agilent-dmm], [libserialport])
 SR_DRIVER([Appa 55II], [appa-55ii], [libserialport])
 SR_DRIVER([Arachnid Labs Re:load Pro], [arachnid-labs-re-load-pro], [libserialport])
@@ -270,6 +271,7 @@ SR_DRIVER([Rigol DS], [rigol-ds])
 SR_DRIVER([Rohde&Schwarz SME-0x], [rohde-schwarz-sme-0x], [libserialport])
 SR_DRIVER([Saleae Logic16], [saleae-logic16], [libusb])
 SR_DRIVER([Saleae Logic Pro], [saleae-logic-pro], [libusb])
+SR_DRIVER([SCPI DMM], [scpi-dmm])
 SR_DRIVER([SCPI PPS], [scpi-pps])
 SR_DRIVER([serial DMM], [serial-dmm], [libserialport])
 SR_DRIVER([serial LCR], [serial-lcr], [libserialport])
