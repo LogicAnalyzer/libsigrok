@@ -560,7 +560,7 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 			return SR_ERR;
 
 		delaycount = readcount * (1 - devc->capture_ratio / 100.0);
-		devc->trigger_at = (readcount - delaycount) * 4 - devc->num_stages;
+		devc->trigger_at = (readcount - delaycount) - devc->num_stages;
 		for (i = 0; i <= devc->num_stages; i++) {
 			sr_dbg("Setting acsp stage %d trigger.", i);
 			if ((ret = set_trigger(sdi, i)) != SR_OK)
