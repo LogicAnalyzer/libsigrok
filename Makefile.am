@@ -191,276 +191,276 @@ src_libdrivers_tail_la_SOURCES = src/driver_list_stop.c
 
 src_libdrivers_la_SOURCES = src/drivers.c
 
-#if HW_AGILENT_DMM
-#src_libdrivers_la_SOURCES += \
-#	src/hardware/agilent-dmm/protocol.h \
-#	src/hardware/agilent-dmm/protocol.c \
-#	src/hardware/agilent-dmm/api.c
-#endif
-#if HW_APPA_55II
-#src_libdrivers_la_SOURCES += \
-#	src/hardware/appa-55ii/protocol.h \
-#	src/hardware/appa-55ii/protocol.c \
-#	src/hardware/appa-55ii/api.c
-#endif
-#if HW_ARACHNID_LABS_RE_LOAD_PRO
-#src_libdrivers_la_SOURCES += \
-#	src/hardware/arachnid-labs-re-load-pro/protocol.h \
-#	src/hardware/arachnid-labs-re-load-pro/protocol.c \
-#	src/hardware/arachnid-labs-re-load-pro/api.c
-#endif
-#if HW_ASIX_SIGMA
-#src_libdrivers_la_SOURCES += \
-#	src/hardware/asix-sigma/protocol.h \
-#	src/hardware/asix-sigma/protocol.c \
-#	src/hardware/asix-sigma/api.c
-#endif
-#if HW_ATTEN_PPS3XXX
-#src_libdrivers_la_SOURCES += \
-# 	src/hardware/atten-pps3xxx/protocol.h \
-# 	src/hardware/atten-pps3xxx/protocol.c \
-# 	src/hardware/atten-pps3xxx/api.c
-# endif
-# if HW_BAYLIBRE_ACME
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/baylibre-acme/protocol.h \
-# 	src/hardware/baylibre-acme/protocol.c \
-# 	src/hardware/baylibre-acme/api.c \
-# 	src/hardware/baylibre-acme/gpio.h \
-# 	src/hardware/baylibre-acme/gpio.c
-# endif
-# if HW_BEAGLELOGIC
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/beaglelogic/beaglelogic.h \
-# 	src/hardware/beaglelogic/protocol.h \
-# 	src/hardware/beaglelogic/protocol.c \
-# 	src/hardware/beaglelogic/api.c \
-# 	src/hardware/beaglelogic/beaglelogic_native.c \
-# 	src/hardware/beaglelogic/beaglelogic_tcp.c
-# endif
-# if HW_BRYMEN_BM86X
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/brymen-bm86x/protocol.h \
-# 	src/hardware/brymen-bm86x/protocol.c \
-# 	src/hardware/brymen-bm86x/api.c
-# endif
-# if HW_BRYMEN_DMM
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/brymen-dmm/parser.c \
-# 	src/hardware/brymen-dmm/protocol.h \
-# 	src/hardware/brymen-dmm/protocol.c \
-# 	src/hardware/brymen-dmm/api.c
-# endif
-# if HW_CEM_DT_885X
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/cem-dt-885x/protocol.h \
-# 	src/hardware/cem-dt-885x/protocol.c \
-# 	src/hardware/cem-dt-885x/api.c
-# endif
-# if HW_CENTER_3XX
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/center-3xx/protocol.h \
-# 	src/hardware/center-3xx/protocol.c \
-# 	src/hardware/center-3xx/api.c
-# endif
-# if HW_CHRONOVU_LA
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/chronovu-la/protocol.h \
-# 	src/hardware/chronovu-la/protocol.c \
-# 	src/hardware/chronovu-la/api.c
-# endif
-# if HW_COLEAD_SLM
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/colead-slm/protocol.h \
-# 	src/hardware/colead-slm/protocol.c \
-# 	src/hardware/colead-slm/api.c
-# endif
-# if HW_CONRAD_DIGI_35_CPU
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/conrad-digi-35-cpu/protocol.h \
-# 	src/hardware/conrad-digi-35-cpu/protocol.c \
-# 	src/hardware/conrad-digi-35-cpu/api.c
-# endif
-# if HW_DEMO
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/demo/protocol.h \
-# 	src/hardware/demo/protocol.c \
-# 	src/hardware/demo/api.c
-# endif
+if HW_AGILENT_DMM
+src_libdrivers_la_SOURCES += \
+	src/hardware/agilent-dmm/protocol.h \
+	src/hardware/agilent-dmm/protocol.c \
+	src/hardware/agilent-dmm/api.c
+endif
+if HW_APPA_55II
+src_libdrivers_la_SOURCES += \
+	src/hardware/appa-55ii/protocol.h \
+	src/hardware/appa-55ii/protocol.c \
+	src/hardware/appa-55ii/api.c
+endif
+if HW_ARACHNID_LABS_RE_LOAD_PRO
+src_libdrivers_la_SOURCES += \
+	src/hardware/arachnid-labs-re-load-pro/protocol.h \
+	src/hardware/arachnid-labs-re-load-pro/protocol.c \
+	src/hardware/arachnid-labs-re-load-pro/api.c
+endif
+if HW_ASIX_SIGMA
+src_libdrivers_la_SOURCES += \
+	src/hardware/asix-sigma/protocol.h \
+	src/hardware/asix-sigma/protocol.c \
+	src/hardware/asix-sigma/api.c
+endif
+if HW_ATTEN_PPS3XXX
+src_libdrivers_la_SOURCES += \
+	src/hardware/atten-pps3xxx/protocol.h \
+	src/hardware/atten-pps3xxx/protocol.c \
+	src/hardware/atten-pps3xxx/api.c
+endif
+if HW_BAYLIBRE_ACME
+src_libdrivers_la_SOURCES += \
+	src/hardware/baylibre-acme/protocol.h \
+	src/hardware/baylibre-acme/protocol.c \
+	src/hardware/baylibre-acme/api.c \
+	src/hardware/baylibre-acme/gpio.h \
+	src/hardware/baylibre-acme/gpio.c
+endif
+if HW_BEAGLELOGIC
+src_libdrivers_la_SOURCES += \
+	src/hardware/beaglelogic/beaglelogic.h \
+	src/hardware/beaglelogic/protocol.h \
+	src/hardware/beaglelogic/protocol.c \
+	src/hardware/beaglelogic/api.c \
+	src/hardware/beaglelogic/beaglelogic_native.c \
+	src/hardware/beaglelogic/beaglelogic_tcp.c
+endif
+if HW_BRYMEN_BM86X
+src_libdrivers_la_SOURCES += \
+	src/hardware/brymen-bm86x/protocol.h \
+	src/hardware/brymen-bm86x/protocol.c \
+	src/hardware/brymen-bm86x/api.c
+endif
+if HW_BRYMEN_DMM
+src_libdrivers_la_SOURCES += \
+	src/hardware/brymen-dmm/parser.c \
+	src/hardware/brymen-dmm/protocol.h \
+	src/hardware/brymen-dmm/protocol.c \
+	src/hardware/brymen-dmm/api.c
+endif
+if HW_CEM_DT_885X
+src_libdrivers_la_SOURCES += \
+	src/hardware/cem-dt-885x/protocol.h \
+	src/hardware/cem-dt-885x/protocol.c \
+	src/hardware/cem-dt-885x/api.c
+endif
+if HW_CENTER_3XX
+src_libdrivers_la_SOURCES += \
+	src/hardware/center-3xx/protocol.h \
+	src/hardware/center-3xx/protocol.c \
+	src/hardware/center-3xx/api.c
+endif
+if HW_CHRONOVU_LA
+src_libdrivers_la_SOURCES += \
+	src/hardware/chronovu-la/protocol.h \
+	src/hardware/chronovu-la/protocol.c \
+	src/hardware/chronovu-la/api.c
+endif
+if HW_COLEAD_SLM
+src_libdrivers_la_SOURCES += \
+	src/hardware/colead-slm/protocol.h \
+	src/hardware/colead-slm/protocol.c \
+	src/hardware/colead-slm/api.c
+endif
+if HW_CONRAD_DIGI_35_CPU
+src_libdrivers_la_SOURCES += \
+	src/hardware/conrad-digi-35-cpu/protocol.h \
+	src/hardware/conrad-digi-35-cpu/protocol.c \
+	src/hardware/conrad-digi-35-cpu/api.c
+endif
+if HW_DEMO
+src_libdrivers_la_SOURCES += \
+	src/hardware/demo/protocol.h \
+	src/hardware/demo/protocol.c \
+	src/hardware/demo/api.c
+endif
 if HW_DREAMSOURCELAB_DSLOGIC
 src_libdrivers_la_SOURCES += \
 	src/hardware/dreamsourcelab-dslogic/protocol.h \
 	src/hardware/dreamsourcelab-dslogic/protocol.c \
 	src/hardware/dreamsourcelab-dslogic/api.c
 endif
-# if HW_FLUKE_45
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/fluke-45/protocol.h \
-# 	src/hardware/fluke-45/protocol.c \
-# 	src/hardware/fluke-45/api.c
-# endif
-# if HW_FLUKE_DMM
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/fluke-dmm/protocol.h \
-# 	src/hardware/fluke-dmm/protocol.c \
-# 	src/hardware/fluke-dmm/api.c
-# endif
-# if HW_FTDI_LA
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/ftdi-la/protocol.h \
-# 	src/hardware/ftdi-la/protocol.c \
-# 	src/hardware/ftdi-la/api.c
-# endif
-# if HW_FX2LAFW
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/fx2lafw/protocol.h \
-# 	src/hardware/fx2lafw/protocol.c \
-# 	src/hardware/fx2lafw/api.c
-# endif
-# if HW_GMC_MH_1X_2X
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/gmc-mh-1x-2x/protocol.h \
-# 	src/hardware/gmc-mh-1x-2x/protocol.c \
-# 	src/hardware/gmc-mh-1x-2x/api.c
-# endif
-# if HW_GWINSTEK_GDS_800
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/gwinstek-gds-800/protocol.h \
-# 	src/hardware/gwinstek-gds-800/protocol.c \
-# 	src/hardware/gwinstek-gds-800/api.c
-# endif
-# if HW_GWINSTEK_GPD
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/gwinstek-gpd/protocol.h \
-# 	src/hardware/gwinstek-gpd/protocol.c \
-# 	src/hardware/gwinstek-gpd/api.c
-# endif
-# if HW_HAMEG_HMO
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/hameg-hmo/protocol.h \
-# 	src/hardware/hameg-hmo/protocol.c \
-# 	src/hardware/hameg-hmo/api.c
-# endif
-# if HW_HANTEK_4032L
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/hantek-4032l/protocol.h \
-# 	src/hardware/hantek-4032l/protocol.c \
-# 	src/hardware/hantek-4032l/api.c
-# endif
-# if HW_HANTEK_6XXX
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/hantek-6xxx/protocol.h \
-# 	src/hardware/hantek-6xxx/protocol.c \
-# 	src/hardware/hantek-6xxx/api.c
-# endif
-# if HW_HANTEK_DSO
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/hantek-dso/protocol.h \
-# 	src/hardware/hantek-dso/protocol.c \
-# 	src/hardware/hantek-dso/api.c
-# endif
-# if HW_HP_3457A
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/hp-3457a/protocol.h \
-# 	src/hardware/hp-3457a/protocol.c \
-# 	src/hardware/hp-3457a/api.c
-# endif
-# if HW_HP_3478A
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/hp-3478a/protocol.h \
-# 	src/hardware/hp-3478a/protocol.c \
-# 	src/hardware/hp-3478a/api.c
-# endif
-# if HW_HUNG_CHANG_DSO_2100
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/hung-chang-dso-2100/protocol.h \
-# 	src/hardware/hung-chang-dso-2100/protocol.c \
-# 	src/hardware/hung-chang-dso-2100/api.c
-# endif
-# if HW_IKALOGIC_SCANALOGIC2
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/ikalogic-scanalogic2/protocol.h \
-# 	src/hardware/ikalogic-scanalogic2/protocol.c \
-# 	src/hardware/ikalogic-scanalogic2/api.c
-# endif
-# if HW_IKALOGIC_SCANAPLUS
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/ikalogic-scanaplus/protocol.h \
-# 	src/hardware/ikalogic-scanaplus/protocol.c \
-# 	src/hardware/ikalogic-scanaplus/api.c
-# endif
-# if HW_IPDBG_LA
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/ipdbg-la/protocol.h \
-# 	src/hardware/ipdbg-la/protocol.c \
-# 	src/hardware/ipdbg-la/api.c
-# endif
-# if HW_KECHENG_KC_330B
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/kecheng-kc-330b/protocol.h \
-# 	src/hardware/kecheng-kc-330b/protocol.c \
-# 	src/hardware/kecheng-kc-330b/api.c
-# endif
-# if HW_KERN_SCALE
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/kern-scale/protocol.h \
-# 	src/hardware/kern-scale/protocol.c \
-# 	src/hardware/kern-scale/api.c
-# endif
-# if HW_KORAD_KAXXXXP
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/korad-kaxxxxp/protocol.h \
-# 	src/hardware/korad-kaxxxxp/protocol.c \
-# 	src/hardware/korad-kaxxxxp/api.c
-# endif
-# if HW_LASCAR_EL_USB
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/lascar-el-usb/protocol.h \
-# 	src/hardware/lascar-el-usb/protocol.c \
-# 	src/hardware/lascar-el-usb/api.c
-# endif
-# if HW_LECROY_LOGICSTUDIO
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/lecroy-logicstudio/protocol.h \
-# 	src/hardware/lecroy-logicstudio/protocol.c \
-# 	src/hardware/lecroy-logicstudio/api.c
-# endif
-# if HW_LECROY_XSTREAM
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/lecroy-xstream/protocol.h \
-# 	src/hardware/lecroy-xstream/protocol.c \
-# 	src/hardware/lecroy-xstream/api.c
-# endif
-# if HW_MANSON_HCS_3XXX
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/manson-hcs-3xxx/protocol.h \
-# 	src/hardware/manson-hcs-3xxx/protocol.c \
-# 	src/hardware/manson-hcs-3xxx/api.c
-# endif
-# if HW_MAYNUO_M97
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/maynuo-m97/protocol.h \
-# 	src/hardware/maynuo-m97/protocol.c \
-# 	src/hardware/maynuo-m97/api.c
-# endif
-# if HW_MIC_985XX
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/mic-985xx/protocol.h \
-# 	src/hardware/mic-985xx/protocol.c \
-# 	src/hardware/mic-985xx/api.c
-# endif
-# if HW_MOTECH_LPS_30X
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/motech-lps-30x/protocol.h \
-# 	src/hardware/motech-lps-30x/protocol.c \
-# 	src/hardware/motech-lps-30x/api.c
-# endif
-# if HW_NORMA_DMM
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/norma-dmm/protocol.h \
-# 	src/hardware/norma-dmm/protocol.c \
-# 	src/hardware/norma-dmm/api.c
-# endif
+if HW_FLUKE_45
+src_libdrivers_la_SOURCES += \
+	src/hardware/fluke-45/protocol.h \
+	src/hardware/fluke-45/protocol.c \
+	src/hardware/fluke-45/api.c
+endif
+if HW_FLUKE_DMM
+src_libdrivers_la_SOURCES += \
+	src/hardware/fluke-dmm/protocol.h \
+	src/hardware/fluke-dmm/protocol.c \
+	src/hardware/fluke-dmm/api.c
+endif
+if HW_FTDI_LA
+src_libdrivers_la_SOURCES += \
+	src/hardware/ftdi-la/protocol.h \
+	src/hardware/ftdi-la/protocol.c \
+	src/hardware/ftdi-la/api.c
+endif
+if HW_FX2LAFW
+src_libdrivers_la_SOURCES += \
+	src/hardware/fx2lafw/protocol.h \
+	src/hardware/fx2lafw/protocol.c \
+	src/hardware/fx2lafw/api.c
+endif
+if HW_GMC_MH_1X_2X
+src_libdrivers_la_SOURCES += \
+	src/hardware/gmc-mh-1x-2x/protocol.h \
+	src/hardware/gmc-mh-1x-2x/protocol.c \
+	src/hardware/gmc-mh-1x-2x/api.c
+endif
+if HW_GWINSTEK_GDS_800
+src_libdrivers_la_SOURCES += \
+	src/hardware/gwinstek-gds-800/protocol.h \
+	src/hardware/gwinstek-gds-800/protocol.c \
+	src/hardware/gwinstek-gds-800/api.c
+endif
+if HW_GWINSTEK_GPD
+src_libdrivers_la_SOURCES += \
+	src/hardware/gwinstek-gpd/protocol.h \
+	src/hardware/gwinstek-gpd/protocol.c \
+	src/hardware/gwinstek-gpd/api.c
+endif
+if HW_HAMEG_HMO
+src_libdrivers_la_SOURCES += \
+	src/hardware/hameg-hmo/protocol.h \
+	src/hardware/hameg-hmo/protocol.c \
+	src/hardware/hameg-hmo/api.c
+endif
+if HW_HANTEK_4032L
+src_libdrivers_la_SOURCES += \
+	src/hardware/hantek-4032l/protocol.h \
+	src/hardware/hantek-4032l/protocol.c \
+	src/hardware/hantek-4032l/api.c
+endif
+if HW_HANTEK_6XXX
+src_libdrivers_la_SOURCES += \
+	src/hardware/hantek-6xxx/protocol.h \
+	src/hardware/hantek-6xxx/protocol.c \
+	src/hardware/hantek-6xxx/api.c
+endif
+if HW_HANTEK_DSO
+src_libdrivers_la_SOURCES += \
+	src/hardware/hantek-dso/protocol.h \
+	src/hardware/hantek-dso/protocol.c \
+	src/hardware/hantek-dso/api.c
+endif
+if HW_HP_3457A
+src_libdrivers_la_SOURCES += \
+	src/hardware/hp-3457a/protocol.h \
+	src/hardware/hp-3457a/protocol.c \
+	src/hardware/hp-3457a/api.c
+endif
+if HW_HP_3478A
+src_libdrivers_la_SOURCES += \
+	src/hardware/hp-3478a/protocol.h \
+	src/hardware/hp-3478a/protocol.c \
+	src/hardware/hp-3478a/api.c
+endif
+if HW_HUNG_CHANG_DSO_2100
+src_libdrivers_la_SOURCES += \
+	src/hardware/hung-chang-dso-2100/protocol.h \
+	src/hardware/hung-chang-dso-2100/protocol.c \
+	src/hardware/hung-chang-dso-2100/api.c
+endif
+if HW_IKALOGIC_SCANALOGIC2
+src_libdrivers_la_SOURCES += \
+	src/hardware/ikalogic-scanalogic2/protocol.h \
+	src/hardware/ikalogic-scanalogic2/protocol.c \
+	src/hardware/ikalogic-scanalogic2/api.c
+endif
+if HW_IKALOGIC_SCANAPLUS
+src_libdrivers_la_SOURCES += \
+	src/hardware/ikalogic-scanaplus/protocol.h \
+	src/hardware/ikalogic-scanaplus/protocol.c \
+	src/hardware/ikalogic-scanaplus/api.c
+endif
+if HW_IPDBG_LA
+src_libdrivers_la_SOURCES += \
+	src/hardware/ipdbg-la/protocol.h \
+	src/hardware/ipdbg-la/protocol.c \
+	src/hardware/ipdbg-la/api.c
+endif
+if HW_KECHENG_KC_330B
+src_libdrivers_la_SOURCES += \
+	src/hardware/kecheng-kc-330b/protocol.h \
+	src/hardware/kecheng-kc-330b/protocol.c \
+	src/hardware/kecheng-kc-330b/api.c
+endif
+if HW_KERN_SCALE
+src_libdrivers_la_SOURCES += \
+	src/hardware/kern-scale/protocol.h \
+	src/hardware/kern-scale/protocol.c \
+	src/hardware/kern-scale/api.c
+endif
+if HW_KORAD_KAXXXXP
+src_libdrivers_la_SOURCES += \
+	src/hardware/korad-kaxxxxp/protocol.h \
+	src/hardware/korad-kaxxxxp/protocol.c \
+	src/hardware/korad-kaxxxxp/api.c
+endif
+if HW_LASCAR_EL_USB
+src_libdrivers_la_SOURCES += \
+	src/hardware/lascar-el-usb/protocol.h \
+	src/hardware/lascar-el-usb/protocol.c \
+	src/hardware/lascar-el-usb/api.c
+endif
+if HW_LECROY_LOGICSTUDIO
+src_libdrivers_la_SOURCES += \
+	src/hardware/lecroy-logicstudio/protocol.h \
+	src/hardware/lecroy-logicstudio/protocol.c \
+	src/hardware/lecroy-logicstudio/api.c
+endif
+if HW_LECROY_XSTREAM
+src_libdrivers_la_SOURCES += \
+	src/hardware/lecroy-xstream/protocol.h \
+	src/hardware/lecroy-xstream/protocol.c \
+	src/hardware/lecroy-xstream/api.c
+endif
+if HW_MANSON_HCS_3XXX
+src_libdrivers_la_SOURCES += \
+	src/hardware/manson-hcs-3xxx/protocol.h \
+	src/hardware/manson-hcs-3xxx/protocol.c \
+	src/hardware/manson-hcs-3xxx/api.c
+endif
+if HW_MAYNUO_M97
+src_libdrivers_la_SOURCES += \
+	src/hardware/maynuo-m97/protocol.h \
+	src/hardware/maynuo-m97/protocol.c \
+	src/hardware/maynuo-m97/api.c
+endif
+if HW_MIC_985XX
+src_libdrivers_la_SOURCES += \
+	src/hardware/mic-985xx/protocol.h \
+	src/hardware/mic-985xx/protocol.c \
+	src/hardware/mic-985xx/api.c
+endif
+if HW_MOTECH_LPS_30X
+src_libdrivers_la_SOURCES += \
+	src/hardware/motech-lps-30x/protocol.h \
+	src/hardware/motech-lps-30x/protocol.c \
+	src/hardware/motech-lps-30x/api.c
+endif
+if HW_NORMA_DMM
+src_libdrivers_la_SOURCES += \
+	src/hardware/norma-dmm/protocol.h \
+	src/hardware/norma-dmm/protocol.c \
+	src/hardware/norma-dmm/api.c
+endif
 if HW_OPENBENCH_LOGIC_SNIFFER
 src_libdrivers_la_SOURCES += \
 	src/hardware/openbench-logic-sniffer/protocol.h \
@@ -473,141 +473,141 @@ src_libdrivers_la_SOURCES += \
 	src/hardware/acsp/protocol.c \
 	src/hardware/acsp/api.c
 endif
-# if HW_PCE_322A
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/pce-322a/protocol.h \
-# 	src/hardware/pce-322a/protocol.c \
-# 	src/hardware/pce-322a/api.c
-# endif
-# if HW_PIPISTRELLO_OLS
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/pipistrello-ols/protocol.h \
-# 	src/hardware/pipistrello-ols/protocol.c \
-# 	src/hardware/pipistrello-ols/api.c
-# endif
-# if HW_RDTECH_DPS
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/rdtech-dps/protocol.h \
-# 	src/hardware/rdtech-dps/protocol.c \
-# 	src/hardware/rdtech-dps/api.c
-# endif
-# if HW_RIGOL_DS
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/rigol-ds/protocol.h \
-# 	src/hardware/rigol-ds/protocol.c \
-# 	src/hardware/rigol-ds/api.c
-# endif
-# if HW_ROHDE_SCHWARZ_SME_0X
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/rohde-schwarz-sme-0x/protocol.h \
-# 	src/hardware/rohde-schwarz-sme-0x/protocol.c \
-# 	src/hardware/rohde-schwarz-sme-0x/api.c
-# endif
-# if HW_SALEAE_LOGIC16
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/saleae-logic16/protocol.h \
-# 	src/hardware/saleae-logic16/protocol.c \
-# 	src/hardware/saleae-logic16/api.c
-# endif
-# if HW_SALEAE_LOGIC_PRO
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/saleae-logic-pro/protocol.h \
-# 	src/hardware/saleae-logic-pro/protocol.c \
-# 	src/hardware/saleae-logic-pro/api.c
-# endif
-# if HW_SCPI_PPS
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/scpi-pps/protocol.h \
-# 	src/hardware/scpi-pps/protocol.c \
-# 	src/hardware/scpi-pps/profiles.c \
-# 	src/hardware/scpi-pps/api.c
-# endif
-# if HW_SERIAL_DMM
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/serial-dmm/protocol.h \
-# 	src/hardware/serial-dmm/protocol.c \
-# 	src/hardware/serial-dmm/api.c
-# endif
-# if HW_SERIAL_LCR
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/serial-lcr/api.c
-# endif
-# if HW_SIGLENT_SDS
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/siglent-sds/protocol.h \
-# 	src/hardware/siglent-sds/protocol.c \
-# 	src/hardware/siglent-sds/api.c
-# endif
-# if HW_SYSCLK_LWLA
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/sysclk-lwla/lwla.h \
-# 	src/hardware/sysclk-lwla/lwla.c \
-# 	src/hardware/sysclk-lwla/lwla1016.c \
-# 	src/hardware/sysclk-lwla/lwla1034.c \
-# 	src/hardware/sysclk-lwla/protocol.h \
-# 	src/hardware/sysclk-lwla/protocol.c \
-# 	src/hardware/sysclk-lwla/api.c
-# endif
-# if HW_TELEINFO
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/teleinfo/protocol.h \
-# 	src/hardware/teleinfo/protocol.c \
-# 	src/hardware/teleinfo/api.c
-# endif
-# if HW_TESTO
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/testo/protocol.h \
-# 	src/hardware/testo/protocol.c \
-# 	src/hardware/testo/api.c
-# endif
-# if HW_TONDAJ_SL_814
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/tondaj-sl-814/protocol.h \
-# 	src/hardware/tondaj-sl-814/protocol.c \
-# 	src/hardware/tondaj-sl-814/api.c
-# endif
-# if HW_UNI_T_DMM
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/uni-t-dmm/protocol.h \
-# 	src/hardware/uni-t-dmm/protocol.c \
-# 	src/hardware/uni-t-dmm/api.c
-# endif
-# if HW_UNI_T_UT32X
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/uni-t-ut32x/protocol.h \
-# 	src/hardware/uni-t-ut32x/protocol.c \
-# 	src/hardware/uni-t-ut32x/api.c
-# endif
-# if HW_VICTOR_DMM
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/victor-dmm/protocol.h \
-# 	src/hardware/victor-dmm/protocol.c \
-# 	src/hardware/victor-dmm/api.c
-# endif
-# if HW_YOKOGAWA_DLM
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/yokogawa-dlm/protocol.h \
-# 	src/hardware/yokogawa-dlm/protocol.c \
-# 	src/hardware/yokogawa-dlm/protocol_wrappers.h \
-# 	src/hardware/yokogawa-dlm/protocol_wrappers.c \
-# 	src/hardware/yokogawa-dlm/api.c
-# endif
-# if HW_ZEROPLUS_LOGIC_CUBE
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/zeroplus-logic-cube/analyzer.c \
-# 	src/hardware/zeroplus-logic-cube/analyzer.h \
-# 	src/hardware/zeroplus-logic-cube/gl_usb.h \
-# 	src/hardware/zeroplus-logic-cube/gl_usb.c \
-# 	src/hardware/zeroplus-logic-cube/protocol.h \
-# 	src/hardware/zeroplus-logic-cube/protocol.c \
-# 	src/hardware/zeroplus-logic-cube/api.c
-# endif
-# if HW_ZKETECH_EBD_USB
-# src_libdrivers_la_SOURCES += \
-# 	src/hardware/zketech-ebd-usb/protocol.h \
-# 	src/hardware/zketech-ebd-usb/protocol.c \
-# 	src/hardware/zketech-ebd-usb/api.c
-# endif
+if HW_PCE_322A
+src_libdrivers_la_SOURCES += \
+	src/hardware/pce-322a/protocol.h \
+	src/hardware/pce-322a/protocol.c \
+	src/hardware/pce-322a/api.c
+endif
+if HW_PIPISTRELLO_OLS
+src_libdrivers_la_SOURCES += \
+	src/hardware/pipistrello-ols/protocol.h \
+	src/hardware/pipistrello-ols/protocol.c \
+	src/hardware/pipistrello-ols/api.c
+endif
+if HW_RDTECH_DPS
+src_libdrivers_la_SOURCES += \
+	src/hardware/rdtech-dps/protocol.h \
+	src/hardware/rdtech-dps/protocol.c \
+	src/hardware/rdtech-dps/api.c
+endif
+if HW_RIGOL_DS
+src_libdrivers_la_SOURCES += \
+	src/hardware/rigol-ds/protocol.h \
+	src/hardware/rigol-ds/protocol.c \
+	src/hardware/rigol-ds/api.c
+endif
+if HW_ROHDE_SCHWARZ_SME_0X
+src_libdrivers_la_SOURCES += \
+	src/hardware/rohde-schwarz-sme-0x/protocol.h \
+	src/hardware/rohde-schwarz-sme-0x/protocol.c \
+	src/hardware/rohde-schwarz-sme-0x/api.c
+endif
+if HW_SALEAE_LOGIC16
+src_libdrivers_la_SOURCES += \
+	src/hardware/saleae-logic16/protocol.h \
+	src/hardware/saleae-logic16/protocol.c \
+	src/hardware/saleae-logic16/api.c
+endif
+if HW_SALEAE_LOGIC_PRO
+src_libdrivers_la_SOURCES += \
+	src/hardware/saleae-logic-pro/protocol.h \
+	src/hardware/saleae-logic-pro/protocol.c \
+	src/hardware/saleae-logic-pro/api.c
+endif
+if HW_SCPI_PPS
+src_libdrivers_la_SOURCES += \
+	src/hardware/scpi-pps/protocol.h \
+	src/hardware/scpi-pps/protocol.c \
+	src/hardware/scpi-pps/profiles.c \
+	src/hardware/scpi-pps/api.c
+endif
+if HW_SERIAL_DMM
+src_libdrivers_la_SOURCES += \
+	src/hardware/serial-dmm/protocol.h \
+	src/hardware/serial-dmm/protocol.c \
+	src/hardware/serial-dmm/api.c
+endif
+if HW_SERIAL_LCR
+src_libdrivers_la_SOURCES += \
+	src/hardware/serial-lcr/api.c
+endif
+if HW_SIGLENT_SDS
+src_libdrivers_la_SOURCES += \
+	src/hardware/siglent-sds/protocol.h \
+	src/hardware/siglent-sds/protocol.c \
+	src/hardware/siglent-sds/api.c
+endif
+if HW_SYSCLK_LWLA
+src_libdrivers_la_SOURCES += \
+	src/hardware/sysclk-lwla/lwla.h \
+	src/hardware/sysclk-lwla/lwla.c \
+	src/hardware/sysclk-lwla/lwla1016.c \
+	src/hardware/sysclk-lwla/lwla1034.c \
+	src/hardware/sysclk-lwla/protocol.h \
+	src/hardware/sysclk-lwla/protocol.c \
+	src/hardware/sysclk-lwla/api.c
+endif
+if HW_TELEINFO
+src_libdrivers_la_SOURCES += \
+	src/hardware/teleinfo/protocol.h \
+	src/hardware/teleinfo/protocol.c \
+	src/hardware/teleinfo/api.c
+endif
+if HW_TESTO
+src_libdrivers_la_SOURCES += \
+	src/hardware/testo/protocol.h \
+	src/hardware/testo/protocol.c \
+	src/hardware/testo/api.c
+endif
+if HW_TONDAJ_SL_814
+src_libdrivers_la_SOURCES += \
+	src/hardware/tondaj-sl-814/protocol.h \
+	src/hardware/tondaj-sl-814/protocol.c \
+	src/hardware/tondaj-sl-814/api.c
+endif
+if HW_UNI_T_DMM
+src_libdrivers_la_SOURCES += \
+	src/hardware/uni-t-dmm/protocol.h \
+	src/hardware/uni-t-dmm/protocol.c \
+	src/hardware/uni-t-dmm/api.c
+endif
+if HW_UNI_T_UT32X
+src_libdrivers_la_SOURCES += \
+	src/hardware/uni-t-ut32x/protocol.h \
+	src/hardware/uni-t-ut32x/protocol.c \
+	src/hardware/uni-t-ut32x/api.c
+endif
+if HW_VICTOR_DMM
+src_libdrivers_la_SOURCES += \
+	src/hardware/victor-dmm/protocol.h \
+	src/hardware/victor-dmm/protocol.c \
+	src/hardware/victor-dmm/api.c
+endif
+if HW_YOKOGAWA_DLM
+src_libdrivers_la_SOURCES += \
+	src/hardware/yokogawa-dlm/protocol.h \
+	src/hardware/yokogawa-dlm/protocol.c \
+	src/hardware/yokogawa-dlm/protocol_wrappers.h \
+	src/hardware/yokogawa-dlm/protocol_wrappers.c \
+	src/hardware/yokogawa-dlm/api.c
+endif
+if HW_ZEROPLUS_LOGIC_CUBE
+src_libdrivers_la_SOURCES += \
+	src/hardware/zeroplus-logic-cube/analyzer.c \
+	src/hardware/zeroplus-logic-cube/analyzer.h \
+	src/hardware/zeroplus-logic-cube/gl_usb.h \
+	src/hardware/zeroplus-logic-cube/gl_usb.c \
+	src/hardware/zeroplus-logic-cube/protocol.h \
+	src/hardware/zeroplus-logic-cube/protocol.c \
+	src/hardware/zeroplus-logic-cube/api.c
+endif
+if HW_ZKETECH_EBD_USB
+src_libdrivers_la_SOURCES += \
+	src/hardware/zketech-ebd-usb/protocol.h \
+	src/hardware/zketech-ebd-usb/protocol.c \
+	src/hardware/zketech-ebd-usb/api.c
+endif
 
 libsigrok_la_LIBADD = src/libdrivers.lo $(SR_EXTRA_LIBS) $(LIBSIGROK_LIBS)
 libsigrok_la_LDFLAGS = -version-info $(SR_LIB_VERSION) -no-undefined
