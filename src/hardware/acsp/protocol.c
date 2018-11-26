@@ -566,15 +566,15 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			
 			sr_dbg("REVERSE: limit: %d, samples: %d",
 					devc->limit_samples, devc->num_samples);
-			offset = (devc->limit_samples - devc->num_samples) * 4;
+			offset = (devc->limit_samples - devc->num_samples);
 			sr_dbg("REVERSE: offset: %d", offset);
 			
 			sr_dbg("REVERSE: this is where it is going to segfault");
 			for (i = 0; i <= devc->rle_count; i++) {
-				memcpy(devc->raw_sample_buf + offset + (i * 4),
-				       devc->sample, 4);
+				memcpy(devc->raw_sample_buf + offset + (i),
+				       devc->sample, 1);
 			}
-			memset(devc->sample, 0, 4);
+			memset(devc->sample, 0, 1);
 			devc->num_bytes = 0;
 			devc->rle_count = 0;
 		}
