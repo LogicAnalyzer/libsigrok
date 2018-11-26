@@ -615,7 +615,7 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			packet.type = SR_DF_LOGIC;
 			sr_dbg("HUNT: 6");
 			packet.payload = &logic;
-			sr_dbg("HUNT: 7");
+			sr_dbg("HUNT: 7 num_samples: %d trigger_at: %d", devc->num_samples, devc->trigger_at);
 			logic.length = (devc->num_samples * 1) - (devc->trigger_at * 1);
 			sr_dbg("HUNT: 8 length: %d", logic.length);
 			logic.unitsize = 1;
