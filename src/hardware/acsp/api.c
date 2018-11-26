@@ -558,9 +558,9 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 		sr_dbg("Send reset command before trigger configure");
 		if (acsp_send_reset(serial) != SR_OK)
 			return SR_ERR;
-		sr_dbg("capture_ratio: %d", devc->capture_ratio);
+		sr_dbg("capture_ratio: %d%", devc->capture_ratio);
 		delaycount = readcount * (devc->capture_ratio / 100.0);
-		devc->trigger_at = (readcount - delaycount) - devc->num_stages;
+		devc->trigger_at = delaycount;
 		for (i = 0; i <= devc->num_stages; i++) {
 			sr_dbg("Setting acsp stage %d trigger.", i);
 			if ((ret = set_trigger(sdi, i)) != SR_OK)
@@ -589,8 +589,8 @@ static int dev_acquisition_start(const struct sr_dev_inst *sdi)
 			(readcount - 1), (delaycount - 1));
 	arg[1] = ((readcount - 1) & 0xff);
 	arg[0] = ((readcount - 1) & 0xff00) >> 8;
-	arg[3] = ((readcount - 1) & 0xff);
-	arg[2] = ((readcount - 1) & 0xff00) >> 8;
+	arg[3] = ((delaycount - 1) & 0xff);
+	arg[2] = ((delaycount - 1) & 0xff00) >> 8;
 	if (acsp_send_longcommand(serial, CMD_CAPTURE_SIZE, arg) != SR_OK)
 		return SR_ERR;
 
