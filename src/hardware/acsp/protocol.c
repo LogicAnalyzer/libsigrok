@@ -565,7 +565,7 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			 */
 			
 			//sr_dbg("REVERSE: limit: %d, samples: %d",
-					devc->limit_samples, devc->num_samples);
+			//		devc->limit_samples, devc->num_samples);
 			offset = (devc->limit_samples - devc->num_samples);
 			//sr_dbg("REVERSE: offset: %d", offset);
 			
