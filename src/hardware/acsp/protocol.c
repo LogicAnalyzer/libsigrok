@@ -502,8 +502,8 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			 * Got a full sample. Convert from the acsp's little-endian
 			 * sample to the local format.
 			 */
-			sample = devc->sample[0] | (devc->sample[1] << 8) \
-					| (devc->sample[2] << 16) | (devc->sample[3] << 24);
+			//sample = devc->sample[0] | (devc->sample[1] << 8) \
+			//		| (devc->sample[2] << 16) | (devc->sample[3] << 24);
 			//sr_dbg("Received sample 0x%.*x.", devc->num_bytes * 2, sample);
 			if (devc->flag_reg & FLAG_RLE) {
 				/*
