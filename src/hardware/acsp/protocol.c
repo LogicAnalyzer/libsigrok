@@ -583,6 +583,7 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 		 * we've acquired all the samples we asked for -- we're done.
 		 * Send the (properly-ordered) buffer to the frontend.
 		 */
+		sr_dbg("HUNT: 1");
 		sr_dbg("Received %d bytes, %d samples, %d decompressed samples.",
 				devc->cnt_bytes, devc->cnt_samples,
 				devc->cnt_samples_rle);
@@ -591,6 +592,7 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			 * A trigger was set up, so we need to tell the frontend
 			 * about it.
 			 */
+			sr_dbg("HUNT: 2");
 			if (devc->trigger_at > 0) {
 				/* There are pre-trigger samples, send those first. */
 				packet.type = SR_DF_LOGIC;
@@ -599,13 +601,16 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 				logic.unitsize = 1;
 				logic.data = devc->raw_sample_buf +
 					(devc->limit_samples - devc->num_samples) * 1;
+				sr_dbg("HUNT: 3");
 				sr_session_send(sdi, &packet);
 			}
 
 			/* Send the trigger. */
+			sr_dbg("HUNT: 4");
 			packet.type = SR_DF_TRIGGER;
 			sr_session_send(sdi, &packet);
 
+			sr_dbg("HUNT: 5");
 			/* Send post-trigger samples. */
 			packet.type = SR_DF_LOGIC;
 			packet.payload = &logic;
@@ -615,6 +620,7 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 				(devc->limit_samples - devc->num_samples) * 1;
 			sr_session_send(sdi, &packet);
 		} else {
+			sr_dbg("HUNT: 6");
 			/* no trigger was used */
 			packet.type = SR_DF_LOGIC;
 			packet.payload = &logic;
@@ -624,9 +630,12 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 				(devc->limit_samples - devc->num_samples) * 1;
 			sr_session_send(sdi, &packet);
 		}
+		sr_dbg("HUNT: 7");
 		g_free(devc->raw_sample_buf);
 
+        sr_dbg("HUNT: 8");
 		serial_flush(serial);
+		sr_dbg("HUNT: 9");
 		acsp_abort_acquisition(sdi);
 	}
 	return TRUE;
