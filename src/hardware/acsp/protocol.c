@@ -619,8 +619,8 @@ SR_PRIV int acsp_receive_data(int fd, int revents, void *cb_data)
 			logic.length = (devc->num_samples * 1) - (devc->trigger_at * 1);
 			sr_dbg("HUNT: 8 length: %d", logic.length);
 			logic.unitsize = 1;
-			sr_dbg("HUNT: 9 raw_sample_buf: %d triggered_at: %d limit_samples: %d num_samples: %d", 
-				   devc->raw_sample_buf, devc->triggered_at, devc->limit_samples, devc->trigger_at);
+			sr_dbg("HUNT: 9 raw_sample_buf: %d trigger_at: %d limit_samples: %d num_samples: %d", 
+				   devc->raw_sample_buf, devc->trigger_at, devc->limit_samples, devc->trigger_at);
 			logic.data = devc->raw_sample_buf + devc->trigger_at * 1 +
 				(devc->limit_samples - devc->num_samples) * 1;
 			sr_dbg("HUNT: 10 data: %d", logic.data);
