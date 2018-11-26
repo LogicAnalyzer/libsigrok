@@ -31,12 +31,13 @@
 #define SCPI_READ_RETRY_TIMEOUT_US (10 * 1000)
 
 static const char *scpi_vendors[][2] = {
-	{ "HEWLETT-PACKARD", "HP" },
 	{ "Agilent Technologies", "Agilent" },
-	{ "RIGOL TECHNOLOGIES", "Rigol" },
-	{ "PHILIPS", "Philips" },
 	{ "CHROMA", "Chroma" },
 	{ "Chroma ATE", "Chroma" },
+	{ "HEWLETT-PACKARD", "HP" },
+	{ "Keysight Technologies", "Keysight" },
+	{ "PHILIPS", "Philips" },
+	{ "RIGOL TECHNOLOGIES", "Rigol" },
 };
 
 /**
@@ -1091,9 +1092,7 @@ SR_PRIV int sr_scpi_get_hw_id(struct sr_scpi_dev_inst *scpi,
 	 * model, serial number of the instrument and the firmware version.
 	 */
 	tokens = g_strsplit(response, ",", 0);
-
-	for (num_tokens = 0; tokens[num_tokens] != NULL; num_tokens++);
-
+	num_tokens = g_strv_length(tokens);
 	if (num_tokens < 4) {
 		sr_dbg("IDN response not according to spec: %80.s.", response);
 		g_strfreev(tokens);
@@ -1137,6 +1136,48 @@ SR_PRIV void sr_scpi_hw_info_free(struct sr_scpi_hw_info *hw_info)
 	g_free(hw_info->serial_number);
 	g_free(hw_info->firmware_version);
 	g_free(hw_info);
+}
+
+/**
+ * Remove potentially enclosing pairs of quotes, un-escape content.
+ * This implementation modifies the caller's buffer when quotes are found
+ * and doubled quote characters need to get removed from the content.
+ *
+ * @param[in, out] s	The SCPI string to check and un-quote.
+ *
+ * @return The start of the un-quoted string.
+ */
+SR_PRIV const char *sr_scpi_unquote_string(char *s)
+{
+	size_t s_len;
+	char quotes[3];
+	char *rdptr;
+
+	/* Immediately bail out on invalid or short input. */
+	if (!s || !*s)
+		return s;
+	s_len = strlen(s);
+	if (s_len < 2)
+		return s;
+
+	/* Check for matching quote characters front and back. */
+	if (s[0] != '\'' && s[0] != '"')
+		return s;
+	if (s[0] != s[s_len - 1])
+		return s;
+
+	/* Need to strip quotes, and un-double quote chars inside. */
+	quotes[0] = quotes[1] = *s;
+	quotes[2] = '\0';
+	s[s_len - 1] = '\0';
+	s++;
+	rdptr = s;
+	while ((rdptr = strstr(rdptr, quotes)) != NULL) {
+		memmove(rdptr, rdptr + 1, strlen(rdptr));
+		rdptr++;
+	}
+
+	return s;
 }
 
 SR_PRIV const char *sr_vendor_alias(const char *raw_vendor)
